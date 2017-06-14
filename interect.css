@@ -1,0 +1,150 @@
+#vtcInterectMod {
+    height: 100%;
+}
+
+.hudong-out {
+    width: 100%;
+    display: block;
+    float: left;
+    margin-left: 0px;
+    padding: 5px 10px;
+    border-bottom: 1px solid #ccc;
+    border-image: url(../../../img/vtc-m/line-top.png) 100 1 stretch;
+    -moz-border-image: url(../../../img/vtc-m/line-top.png) 100 1 stretch;
+    -webkit-border-image: url(../../../img/vtc-m/line-top.png) 100 1 stretch;
+    border-top-width: 0px;
+}
+
+.hudong-head {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    float: left;
+}
+
+.hudong-right {
+    float: right;
+    width: 85%;
+}
+
+.hudong-top {
+    height: 24px;
+    line-height: 24px;
+}
+
+.hudong-bottom {
+    color: #666;
+    display: block;
+    position: relative;
+}
+
+.hudong-admin {
+    width: 35px;
+    height: 20px;
+    margin-top: 2px;
+    margin-left: 5px;
+    vertical-align: top;
+}
+
+#hudong {
+    background: #fff;
+    width: 100%;
+    font-family: "Microsoft Yahei";
+    height: 100%;
+}
+
+.hudong{
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.hudong-user {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 65% !important;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.hudong-nick {
+    max-width: 73%;
+    display: inherit;
+    color: #1eb2ff;
+    font-size: 13px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.hudong-time {
+    float: right;
+    display: block;
+    color: #999;
+}
+
+.hudong-fav {
+    width: 8%;
+    vertical-align: middle;
+    margin-left: 3.5%;
+    max-width: 35px;
+}
+
+.chatTextPar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #fff;
+    border-width: thin;
+    border-top: 1px solid #eeeeee;
+    border-bottom: 1px solid rgba(238, 238, 238, 0.7);
+    z-index: 999;
+}
+
+.chat_text {
+    max-height: 72px;
+    background: rgb(255, 255, 255);
+    margin-left: 2.5%;
+    line-height: 40px;
+    width: 67%;
+    display: inline-block;
+    font-size: 14px;
+    vertical-align: middle;
+    word-wrap: break-word;
+    overflow-y: auto;
+}
+
+#chat_text:empty::before {
+    color: lightgrey;
+    content: attr(placeholder);
+}
+
+#chat_text {
+    background: rgb(255, 255, 255);
+    width: 100%;
+    display: inline-block;
+    font-size: 14px;
+    vertical-align: middle;
+    word-wrap: break-word;
+    overflow-y: auto;
+    line-height: 1.5;
+    border-bottom: 1px solid #ccc;
+}
+
+#chat_text:focus {
+    border-bottom: 1px solid #38b9ff;
+}
+
+#send_message_button {
+    bottom: 10px;
+    height: 26px;
+    line-height: 26px;
+    width: 13%;
+    margin-left: 1.6%;
+    display: inline-block;
+    background-color: #38b9ff;
+    text-align: center;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 2px;
+    text-decoration: none;
+    font-weight: 400;
+}
