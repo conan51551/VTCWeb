@@ -1,5 +1,3 @@
-
-$("#vtcInterectMod").height($(".extend-model").height() - 30);
 Vue.component('interect', {
     template: '\
     <div id="hudong">\
@@ -25,7 +23,7 @@ Vue.component('interect', {
             <div class="chat_text">\
                 <div id="chat_text" v-text="sendMsg" contenteditable="true" @keyup="divModel($event)" placeholder="说点什么吧~"></div>\
             </div>\
-            <a id="send_message_button" @click="submitClick">发送</a>\
+            <a id="send_message_button" @click="submitClick" @keypress:enter="submitClick">发送</a>\
         </div>\
     </div>\
     ',
@@ -37,12 +35,14 @@ Vue.component('interect', {
             userImage: "pic/default-user-photo.jpg",
             userId: userInfo.userId,
             isAdminUser: false,
+            isGetOnlineCnt: true,
+            onlineCnt: 0,
             isNeedScroll: true, //是否还需要向下滚动
             isGetHisMsg: true, //是否主动去获取历史消息
             lasttimestamp: "", //最后一条消息的时间戳
             thisHisMsgNum: 0, //获取的历史消息的总数
             isFirstGetHisMsg: true, //是否是第一次去获取历史消息
-            hasMore: "", //判断是否还有更多的消息
+            hasMore: "...", //判断是否还有更多的消息
             hudongHeight: 0, //互动消息滚动窗口的高度
             vtcInterectModHeight: 0, //互动模块的整体高度
         }
@@ -59,7 +59,7 @@ Vue.component('interect', {
     methods: {
         calcHDHeight: function() {
             var that = this;
-            that.vtcInterectModHeight = $(".extend-model").height() - 30;
+            that.vtcInterectModHeight = elHight.extendModel - 30;
             that.hudongHeight = that.vtcInterectModHeight - 40;
         },
         divModel: function(e) {
@@ -119,31 +119,32 @@ Vue.component('interect', {
                 });
         },
         stats: function(res) { //注册
-            onlineCnt = res.count;
+            var that = this;
+            that.onlineCnt = res.count;
             var leaveCnt = res.leaveCount;
             if (player.videoInfo.liveFlag != 0) {
-                onlineCnt = onlineCnt - leaveCnt;
+                that.onlineCnt = that.onlineCnt - leaveCnt;
             }
             //显示注册的人数，显示在线人数
-            // showOnlineCnt(onlineCnt);
+            player.$refs.controls.viewCnt = that.onlineCnt;
         },
         getMsg: function(res) { //获取及时聊天的消息
             var that = this;
             if (player.videoInfo.liveFlag != 0) {
                 netimobj.stats(); //直播时,轮询stats方法,显示实时人数
             } else { //非直播时,显示人数只增
-                if (isGetOnlineCnt) {
+                if (that.isGetOnlineCnt) {
                     netimobj.stats();
-                    isGetOnlineCnt = false;
+                    that.isGetOnlineCnt = false;
                 }
                 for (var i = 0; i < res.users.length; i++) {
                     console.log("有人登录了:" + res.users[i]);
                     if (res.users[i] != mynick) {
-                        onlineCnt++;
+                        that.onlineCnt++;
                         console.log("自己登录的不算数");
                     }
                 }
-                showOnlineCnt(onlineCnt);
+                player.$refs.controls.viewCnt = that.onlineCnt;
             }
             if (that.isGetHisMsg) {
                 that.lasttimestamp = res.lastStamp;
@@ -260,21 +261,27 @@ Vue.component('interect', {
             var that = this;
             var div = document.getElementById("hudong");
             scrollLength = div.scrollHeight;
-            $('#hudong').animate({
+            $('.hudong').animate({
                 scrollTop: scrollLength
             }, 200);
         }
     },
+    watch: {
+        vtcInterectModHeight: function() {
+            console.log("高度" + this.vtcInterectModHeight);
+        }
+    }
 });
 
 function showHisMsg(res) {
     interect.showHisMsg(res);
 }
 
-$(".extend-model").append("<div id='vtcInterectMod' ref='interect2'>\
+$(".extend-model").append("<div id='vtcInterectMod'>\
                                 <interect></interect>\
                             </div>\
                         ");
+$("#vtcInterectMod").height($(".extend-model").height() - 30);
 new Vue({
     el: '#vtcInterectMod'
 });
