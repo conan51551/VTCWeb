@@ -275,6 +275,6 @@ $(".extend-model").append("<div id='vtcInterectMod' ref='interect2'>\
                                 <interect></interect>\
                             </div>\
                         ");
-// new Vue({
-//     el: '#vtcInterectMod'
-// });
+new Vue({
+    el: '#vtcInterectMod'
+});

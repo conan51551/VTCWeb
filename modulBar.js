@@ -1,7 +1,7 @@
-$(".extend-model").append("<div id='vtcModulBar'>\
-                                <modubar></modubar>\
-                            </div>\
-                        ");
+// $(".extend-model").append("<div id='vtcModulBar'>\
+//                                 <modubar></modubar>\
+//                             </div>\
+//                         ");
 Vue.component('modubar', {
     template: '\
     <div id="tabs">\
@@ -21,6 +21,6 @@ Vue.component('modubar', {
 
 });
 
-new Vue({
-    el: '#vtcModulBar'
-});
+// new Vue({
+//     el: '#vtcModulBar'
+// });
