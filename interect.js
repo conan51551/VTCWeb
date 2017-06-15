@@ -1,7 +1,7 @@
 Vue.component('interect', {
     template: '\
-    <div id="hudong">\
-        <div class="hudong" :style="{height:hudongHeight+\'px\'}">\
+    <div id="hudong" class="display-flex">\
+        <div class="hudong display-flex">\
             <div style="text-align: center" class="loadHisMsgs" @click="loadHisMsgs" v-show="hasMore">{{hasMore}}</div>\
             <div class="hudong-out" v-for="(item,index) in msgDataArr">\
                 <img :src="item.img" alt="" class="hudong-head" />\
@@ -43,13 +43,10 @@ Vue.component('interect', {
             thisHisMsgNum: 0, //获取的历史消息的总数
             isFirstGetHisMsg: true, //是否是第一次去获取历史消息
             hasMore: "...", //判断是否还有更多的消息
-            hudongHeight: 0, //互动消息滚动窗口的高度
-            vtcInterectModHeight: 0, //互动模块的整体高度
         }
     },
     mounted: function() {
         var that = this;
-        that.calcHDHeight();
     },
     created: function() {
         var that = this;
@@ -57,11 +54,6 @@ Vue.component('interect', {
         that.initNeti();
     },
     methods: {
-        calcHDHeight: function() {
-            var that = this;
-            that.vtcInterectModHeight = elHight.extendModel - 30;
-            that.hudongHeight = that.vtcInterectModHeight - 40;
-        },
         divModel: function(e) {
             var that = this;
             that.sendMsg = e.target.innerText;
@@ -277,11 +269,10 @@ function showHisMsg(res) {
     interect.showHisMsg(res);
 }
 
-$(".extend-model").append("<div id='vtcInterectMod'>\
+$(".extend-model").append("<div id='vtcInterectMod' class='display-flex'>\
                                 <interect></interect>\
                             </div>\
                         ");
-$("#vtcInterectMod").height($(".extend-model").height() - 30);
 new Vue({
     el: '#vtcInterectMod'
 });

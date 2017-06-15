@@ -1,5 +1,7 @@
 #vtcInterectMod {
     height: 100%;
+    flex: 1;
+    flex-direction: column;
 }
 
 .hudong-out {
@@ -51,11 +53,15 @@
     width: 100%;
     font-family: "Microsoft Yahei";
     height: 100%;
+    flex: 1;
+    flex-direction: column;
 }
 
-.hudong{
+.hudong {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    flex: 1;
+    flex-direction: column;
 }
 
 .hudong-user {

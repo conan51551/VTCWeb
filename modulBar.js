@@ -1,6 +1,6 @@
 Vue.component('modubar', {
     template: '\
-    <div id="tabs">\
+    <div id="tabs" class="display-flex">\
         <span :class="[\'tabs-span\',{selected : selectTab == index}]" v-for="(item, index) in tabsname" @click="changeTab(index)">{{item}}</span>\
     </div>\
     ',
