@@ -1,4 +1,6 @@
-Vue.component('interect', {
+var hudongId = 1; //互动模块的id
+var hudongRef = queryModelRef(hudongId);//互动模块的ref
+var interectCom = Vue.component('interect', {
     template: '\
     <div id="hudong" class="display-flex">\
         <div class="hudong display-flex">\
@@ -169,7 +171,6 @@ Vue.component('interect', {
                         laststamp: that.lasttimestamp
                     });
                 }
-
             }
         },
         getDate: function(tm) {
@@ -233,17 +234,7 @@ Vue.component('interect', {
                         }
                     }
                 } else {
-                    // var contentText = $("#hudong").find(".hudong-out").length;
-                    // var contentTextHeight = 0;
-                    // for (var x = 0; x < contentText; x++) { //没有消息的时候
-                    //     contentTextHeight += 54;
-                    // }
-                    // if (contentTextHeight < $("#hudong").height()) {
-                    //     //当请求的历史聊天记录没有消息时并且展示的内容不足以填满聊天框,不再做任何事件
-                    //     that.hasMore = ""
-                    // } else {
-                    //     that.hasMore = "已经没有更多消息";
-                    // }
+                    that.hasMore = ""; //当没有查到的历史消息时，就不能加载以前的消息了
                 }
             } else {
                 console.log("Got message but bad rc = " + res.code);
@@ -256,6 +247,26 @@ Vue.component('interect', {
             $('.hudong').animate({
                 scrollTop: scrollLength
             }, 200);
+        },
+        iphoneInput: function() {
+            //解决iphone上评论的窗口输入文字后整个页面问题
+            if (navigator.userAgent.match(/(iPad|iPhone|iPod)/g)) {
+                $('#chat_text').focus(function() {
+                    document.body.scrollTop = document.body.scrollHeight;
+                    $('.bottom-box').css('margin-bottom', '0px');
+
+                    setTimeout(function() {
+                        $('.chatTextPar').css("margin-bottom", "50px");
+                    }, 100);
+                }).blur(function() {
+                    var videBox = $(window).width();
+                    $('.bottom-box').css('margin-top', $(".fix-top").height() || 0);
+
+                    setTimeout(function() {
+                        $('.chatTextPar').css("margin-bottom", "0px");
+                    }, 100);
+                })
+            }
         }
     },
     watch: {
@@ -268,11 +279,8 @@ Vue.component('interect', {
 function showHisMsg(res) {
     interect.showHisMsg(res);
 }
-
-$(".extend-model").append("<div id='vtcInterectMod' class='display-flex'>\
-                                <interect></interect>\
+$(".extend-model").append("<div id='vtcInterectMod' class='display-flex' v-show='" + hudongId + " == selectModel'>\
+                                <interect ref="+hudongRef+"></interect>\
                             </div>\
                         ");
-new Vue({
-    el: '#vtcInterectMod'
-});
+loadModels.finish++;

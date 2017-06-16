@@ -1,0 +1,229 @@
+#vtcPicAndText {
+    flex: 1;
+    flex-direction: column;
+    height: 100%;
+}
+
+.PT-window {
+    background: #fff;
+    width: 100%;
+    font-family: "Microsoft Yahei";
+    height: 100%;
+    flex: 1;
+    flex-direction: column;
+}
+
+.picAndText {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    flex: 1;
+    flex-direction: column;
+}
+
+.displayPt {
+    border-radius: 10px;
+    zoom: 1;
+    width: 100%;
+}
+
+.picTop {
+    margin: 15px 0px;
+    width: 100%;
+    padding: 0px 10px;
+    color: #999999;
+}
+
+.deletePic {
+    float: right;
+    color: #3194d5;
+}
+
+.showText {
+    padding: 0px 15px;
+}
+
+.showTextInner {
+    border-bottom: 1px solid rgb(238, 238, 238);
+    padding-bottom: 15px;
+    overflow: hidden;
+}
+
+.picBottom {
+    bottom: 0;
+    width: 100%;
+    background: #fff;
+    border-width: thin;
+    z-index: 999;
+    height: 50px;
+    text-align: center;
+}
+
+.picBtn {
+    width: 35%;
+    height: 30px;
+    margin: 0 auto;
+    border: 1px solid #3093d4;
+    border-radius: 3px;
+    font-size: 16px;
+    color: #3093d4;
+    margin-top: 10px;
+    background: #ffffff;
+    line-height: 30px;
+}
+
+.reminder {
+    width: 100%;
+    margin: 0 auto;
+    background-color: rgb(255, 255, 255);
+    border-radius: 3px 3px 0 0;
+    padding: 2.8% 4.2%;
+    bottom: 0;
+    z-index: 1002;
+}
+
+.publish-article-content {
+    position: relative;
+}
+
+.g-image-upload-box {
+    width: 20%;
+    background-color: #f8f8f8;
+    height: 30px;
+    margin-left: 10px;
+    margin-top: 7px;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid #cccccc;
+}
+
+.upload-button {
+    margin-top: 5px;
+}
+
+.upload {
+    color: #666666;
+}
+
+#editPicAndText {
+    height: 300px;
+    position: fixed;
+    padding: 0px;
+}
+
+.editPicDiv {
+    height: 44px;
+    background: #f8f8f8;
+    border-bottom: 1px solid #dddddd;
+}
+
+.loading-img {
+    z-index: 999;
+    display: none;
+    position: absolute;
+    width: 16px;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    margin: auto;
+}
+
+#imageUpload {
+    position: absolute;
+    left: 0;
+    opacity: 0;
+    width: 25%;
+}
+
+.uploadBtn {
+    color: #ffffff;
+}
+
+.footer-btn-right {
+    float: right;
+    float: right;
+    margin-right: 10px;
+    background: #3194d5;
+    border: 1px solid #007fd2;
+}
+
+.picPop {
+    background-color: rgba(0, 0, 0, 0.3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1001;
+    margin: 0 auto;
+}
+
+
+/*S 动画*/
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity .5s
+}
+
+.fade-enter,
+.fade-leave-active {
+    opacity: 0
+}
+
+@-webkit-keyframes slideInUp {
+    from {
+        bottom: -420px;
+        visibility: visible;
+    }
+    to {
+        bottom: 0px;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        bottom: -420px;
+        visibility: visible;
+    }
+    to {
+        bottom: 0px;
+    }
+}
+
+.slideInUp {
+    -webkit-animation-name: slideInUp;
+    animation-name: slideInUp;
+}
+
+@-webkit-keyframes slideOutDown {
+    from {
+        bottom: 0;
+    }
+    to {
+        visibility: hidden;
+        bottom: -420px;
+    }
+}
+
+@keyframes slideOutDown {
+    from {
+        bottom: 0;
+    }
+    to {
+        visibility: hidden;
+        bottom: -420px;
+    }
+}
+
+.slideOutDown {
+    -webkit-animation-name: slideOutDown;
+    animation-name: slideOutDown;
+}
+
+.animated {
+    -webkit-animation-duration: .5s;
+    animation-duration: .5s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}

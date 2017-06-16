@@ -11,9 +11,9 @@
     margin-left: 0px;
     padding: 5px 10px;
     border-bottom: 1px solid #ccc;
-    border-image: url(../../../img/vtc-m/line-top.png) 100 1 stretch;
-    -moz-border-image: url(../../../img/vtc-m/line-top.png) 100 1 stretch;
-    -webkit-border-image: url(../../../img/vtc-m/line-top.png) 100 1 stretch;
+    border-image: url(../../img/vtc-m/line-top.png) 100 1 stretch;
+    -moz-border-image: url(../../img/vtc-m/line-top.png) 100 1 stretch;
+    -webkit-border-image: url(../../img/vtc-m/line-top.png) 100 1 stretch;
     border-top-width: 0px;
 }
 
