@@ -11,7 +11,8 @@ Vue.component('modubar', {
             modelId: [], //各个模块的ID
         }
     },
-    mounted: function() {},
+    mounted: function() {
+    },
     created: function() {
 
     },
@@ -20,6 +21,9 @@ Vue.component('modubar', {
             var that = this;
             that.selectTab = _index;
             models.selectModel = _index;
+            if(_index == 2){
+                models.$refs.pat.queryPicAndText();
+            }
         },
         getRecordTabsInfo: function() {
             var that = this;
@@ -64,7 +68,6 @@ Vue.component('modubar', {
                             loadStyles(model.cssPath)
                             loadScript(model.jsPath)
                             console.log(`${model.name}模块,加载完成!`)
-                            player.loadModels = false;
                             loadModels.loadNum++;
                             if (isFirstShow) {
                                 isFirstShow = false;

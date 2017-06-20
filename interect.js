@@ -79,6 +79,7 @@ var interectCom = Vue.component('interect', {
                     userId: that.userId,
                 }
                 that.msgDataArr.push(send);
+                sendDanmu(that.sendMsg,true);
                 that.sc(); //每发一条消息，滚动到最新的消息
                 if (netimobj) {
                     netimobj.sendmsg(send,
@@ -154,6 +155,7 @@ var interectCom = Vue.component('interect', {
                         mtime = that.getDate(mtime);
                         msg.sendtime = mtime;
                         that.msgDataArr.push(msg);
+                        sendDanmu(msg.body);
                         that.sc();
                     }
                 }
