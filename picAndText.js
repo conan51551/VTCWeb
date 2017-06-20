@@ -75,6 +75,7 @@ var picAndTextCom = Vue.component('picandtext', {
             isEditPic: false,
             loadMsg: "加载中...",
             deleteId: "",
+            isClick: true,
         }
     },
     mounted: function() {
@@ -122,7 +123,6 @@ var picAndTextCom = Vue.component('picandtext', {
                     that.showPicAndText();
                 }
             }
-            console.log("滚动");
         },
         queryPicAndText: function() {
             var videoId = videoInfo.videoId;
@@ -140,13 +140,13 @@ var picAndTextCom = Vue.component('picandtext', {
             }
             if (videoId != null || videoId != "") {
                 $.ajax({
-                    url: videoURL,
+                    url: cacheTimeout(videoURL),
                     type: "get",
                     dataType: "json",
                     async: false,
                     success: function(res) {
-                        var arr1 = that.picDiv.slice(0);
-                        var arr2 = res.slice(0);
+                        const arr1 = [...that.picDiv];
+                        const arr2 = [...res];
                         if (that.compareArr(arr1, arr2)) {
                             that.picDiv = [];
                             for (var i = 0, len = res.length; i < len; i += 5) {
@@ -180,31 +180,38 @@ var picAndTextCom = Vue.component('picandtext', {
         },
         addGraphic: function() {
             var that = this;
-            var videoId = videoInfo.videoId;
-            var content = encodeURI($("#target").val());
-            if (content != "") {
-                var data = {
-                    "glb.videoId": videoId,
-                    "glb.userId": userInfo.userId,
-                    "glb.nickname": userInfo.nickname,
-                    "glb.content": content
-                };
-                $.ajax({
-                    url: "ajx/addGraphic.do",
-                    data: data,
-                    type: "post",
-                    dataType: "json",
-                    success: function(res) {
-                        var addResult = res.result;
-                        if (addResult == "OK") {
-                            that.isEditPic = false;
-                            that.picDiv = [];
-                            that.totalPic = [];
-                            that.queryPicAndText();
+            if (that.isClick) {
+                that.isClick = false;
+                var videoId = videoInfo.videoId;
+                var content = encodeURI($("#target").val());
+                if (content != "") {
+                    var data = {
+                        "glb.videoId": videoId,
+                        "glb.userId": userInfo.userId,
+                        "glb.nickname": userInfo.nickname,
+                        "glb.content": content
+                    };
+                    $.ajax({
+                        url: "ajx/addGraphic.do",
+                        data: data,
+                        type: "post",
+                        dataType: "json",
+                        success: function(res) {
+                            var addResult = res.result;
+                            if (addResult == "OK") {
+                                that.isEditPic = false;
+                                that.picDiv = [];
+                                that.totalPic = [];
+                                that.queryPicAndText();
+                                that.isClick = true;
+                            }
+                        },
+                        error: function() {
+                            that.isClick = true;
                         }
-                    }
-                })
-            };
+                    })
+                };
+            }
         },
         deletePic: function(_id) {
             var that = this;
@@ -228,17 +235,24 @@ var picAndTextCom = Vue.component('picandtext', {
                 return true;
             } else {
                 for (var i = 0; i < index; i++) {
-                    var sliceIndex = index;
-                    if (_arr1[i].tid != _arr2[i].tid) {
+                    var isSame = arr2.find(function(element) {
+                        return element.tid == arr1[i].tid;
+                    });
+                    if (!isSame) {
                         return true;
                     }
+
+                    // var sliceIndex = index;
+                    // if (_arr1[i].tid != _arr2[i].tid) {
+                    //     return true;
+                    // }
                 }
             }
-            if(arr1.length != arr2.length){
+            if (arr1.length != arr2.length) {
                 return true;
             }
             return false;
-        }
+        },
     },
 });
 

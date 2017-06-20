@@ -1,9 +1,9 @@
 var hudongId = 1; //互动模块的id
-var hudongRef = queryModelRef(hudongId);//互动模块的ref
+var hudongRef = queryModelRef(hudongId); //互动模块的ref
 var interectCom = Vue.component('interect', {
     template: '\
     <div id="hudong" class="display-flex">\
-        <div class="hudong display-flex">\
+        <div class="hudong display-flex" @scroll="scrollInterect($event)">\
             <div style="text-align: center" class="loadHisMsgs" @click="loadHisMsgs" v-show="hasMore">{{hasMore}}</div>\
             <div class="hudong-out" v-for="(item,index) in msgDataArr">\
                 <img :src="item.img" alt="" class="hudong-head" />\
@@ -23,7 +23,7 @@ var interectCom = Vue.component('interect', {
             <img src="img/btn_sendRB.png" class="hudong-fav" style="display:none;"/>\
             <img src="img/vtc-m/favour.png" class="hudong-fav"/>\
             <div class="chat_text">\
-                <div id="chat_text" v-text="sendMsg" contenteditable="true" @keyup="divModel($event)" placeholder="说点什么吧~"></div>\
+                <div id="chat_text" v-text="sendMsg" contenteditable="true" @focus="focusInput" @blur="blurInput" @keyup="divModel($event)" placeholder="说点什么吧~"></div>\
             </div>\
             <a id="send_message_button" @click="submitClick" @keypress:enter="submitClick">发送</a>\
         </div>\
@@ -44,7 +44,9 @@ var interectCom = Vue.component('interect', {
             lasttimestamp: "", //最后一条消息的时间戳
             thisHisMsgNum: 0, //获取的历史消息的总数
             isFirstGetHisMsg: true, //是否是第一次去获取历史消息
-            hasMore: "...", //判断是否还有更多的消息
+            hasMore: "正在加载", //判断是否还有更多的消息
+            interectScroll: true, //互动是否在滚动
+            scrollTop1: 0,
         }
     },
     mounted: function() {
@@ -56,7 +58,7 @@ var interectCom = Vue.component('interect', {
         that.initNeti();
     },
     methods: {
-        divModel: function(e) {
+        divModel: function(e) { //点击输入框事件
             var that = this;
             that.sendMsg = e.target.innerText;
         },
@@ -79,7 +81,7 @@ var interectCom = Vue.component('interect', {
                     userId: that.userId,
                 }
                 that.msgDataArr.push(send);
-                sendDanmu(that.sendMsg,true);
+                sendDanmu(that.sendMsg, true);
                 that.sc(); //每发一条消息，滚动到最新的消息
                 if (netimobj) {
                     netimobj.sendmsg(send,
@@ -192,14 +194,30 @@ var interectCom = Vue.component('interect', {
                 return tt;
             }
         },
+        scrollInterect(_this) {
+            var that = this;
+            var scrollTop = _this.target.scrollTop;
+            var clientHeight = _this.target.clientHeight;
+            var scrollHeight = _this.target.scrollHeight;
+            if (scrollTop == 0) {
+                if (that.interectScroll) {
+                    that.interectScroll = false;
+                    that.gethisMsg();
+                    that.isNeedScroll = false;
+                }
+            }
+            _this.preventDefault();
+            _this.stopPropagation();
+             
+        },
         loadHisMsgs: function() { //点击更多去加载以前的消息
             var that = this;
-            that.gethisMsg();
-            that.isNeedScroll = false;
+
         },
         showHisMsg: function(res) {
             var that = this;
             that.isGetHisMsg = false;
+            that.interectScroll = true;
             //定时刷新cnd消息
             if (res.code == 0) {
                 if (res.count != 0) {
@@ -212,7 +230,9 @@ var interectCom = Vue.component('interect', {
                         mtime = that.getDate(mtime);
                         msg.sendtime = mtime;
                         that.msgDataArr.unshift(msg);
+
                     }
+                    $(".hudong").scrollTop(that.scrollTop1);
                     /***获取一页消息后,判断是否还要再请求***/
                     var contentTextHeight = 0;
                     for (var x = 0; x < that.thisHisMsgNum; x++) {
@@ -224,11 +244,11 @@ var interectCom = Vue.component('interect', {
                             //当历史聊天内容不足以填满全部聊天框之后,再向前请求一次聊天内容
                             interect.gethisMsg();
                         } else {
+                            that.scrollTop1 = $(".hudong")[0].scrollHeight;
                             that.thisHisMsgNum = 0; //够一页就清零
                             if (that.isNeedScroll) {
                                 that.sc();
                             }
-
                             if (that.isFirstGetHisMsg) {
                                 $("#hudong").scrollTop($("#hudong")[0].scrollHeight);
                                 that.isFirstGetHisMsg = false;
@@ -242,32 +262,25 @@ var interectCom = Vue.component('interect', {
                 console.log("Got message but bad rc = " + res.code);
             }
         },
-        sc: function() {
+        sc: function() { //收到或者发送消息成功，滚动到最新消息
             var that = this;
-            var div = document.getElementById("hudong");
-            scrollLength = div.scrollHeight;
+            var scrollLength = $(".hudong")[0].scrollHeight;
             $('.hudong').animate({
                 scrollTop: scrollLength
             }, 200);
         },
-        iphoneInput: function() {
-            //解决iphone上评论的窗口输入文字后整个页面问题
+        focusInput() {
             if (navigator.userAgent.match(/(iPad|iPhone|iPod)/g)) {
-                $('#chat_text').focus(function() {
-                    document.body.scrollTop = document.body.scrollHeight;
-                    $('.bottom-box').css('margin-bottom', '0px');
-
-                    setTimeout(function() {
-                        $('.chatTextPar').css("margin-bottom", "50px");
-                    }, 100);
-                }).blur(function() {
-                    var videBox = $(window).width();
-                    $('.bottom-box').css('margin-top', $(".fix-top").height() || 0);
-
-                    setTimeout(function() {
-                        $('.chatTextPar').css("margin-bottom", "0px");
-                    }, 100);
-                })
+                setTimeout(function() {
+                    $('.chatTextPar').css("margin-bottom", "50px");
+                }, 100);
+            }
+        },
+        blurInput() {
+            if (navigator.userAgent.match(/(iPad|iPhone|iPod)/g)) {
+                setTimeout(function() {
+                    $('.chatTextPar').css("margin-bottom", "0px");
+                }, 100);
             }
         }
     },
@@ -282,7 +295,7 @@ function showHisMsg(res) {
     interect.showHisMsg(res);
 }
 $(".extend-model").append("<div id='vtcInterectMod' class='display-flex' v-show='" + hudongId + " == selectModel'>\
-                                <interect ref="+hudongRef+"></interect>\
+                                <interect ref=" + hudongRef + "></interect>\
                             </div>\
                         ");
 loadModels.finish++;

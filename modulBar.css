@@ -6,10 +6,10 @@
 }
 
 #tabs span {
-    background: -moz-linear-gradient(top, #fff, #eee);
-    background: -webkit-gradient(linear, top, from(#fff), to(#eee));
-    background: -webkit-linear-gradient(top, #fff, #eee);
-    background: -o-linear-gradient(top, #fff, #eee);
+    background: -moz-linear-gradient(top, #fff, #f8f8f8);
+    background: -webkit-gradient(linear, top, from(#fff), to(#f8f8f8));
+    background: -webkit-linear-gradient(top, #fff, #f8f8f8);
+    background: -o-linear-gradient(top, #fff, #f8f8f8);
     flex: 1;
 }
 

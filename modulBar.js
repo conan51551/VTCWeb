@@ -23,6 +23,8 @@ Vue.component('modubar', {
             models.selectModel = _index;
             if(_index == 2){
                 models.$refs.pat.queryPicAndText();
+            }else if(_index == 6){
+                models.$refs.introduce.queryIntroduce();
             }
         },
         getRecordTabsInfo: function() {

@@ -4,7 +4,14 @@
     flex-direction: column;
 }
 
+.loadHisMsgs {
+    text-align: center;
+    vertical-align: middle;
+    padding-bottom: 5px;
+}
+
 .hudong-out {
+    background-color: #fff;
     width: 100%;
     display: block;
     float: left;
@@ -49,7 +56,6 @@
 }
 
 #hudong {
-    background: #fff;
     width: 100%;
     font-family: "Microsoft Yahei";
     height: 100%;
@@ -62,6 +68,7 @@
     -webkit-overflow-scrolling: touch;
     flex: 1;
     flex-direction: column;
+    background-color: #eee;
 }
 
 .hudong-user {
