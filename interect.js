@@ -11,7 +11,7 @@ var interectCom = Vue.component('interect', {
                     <div class="hudong-top">\
                         <div class="hudong-user">\
                             <span class="hudong-nick">{{item.nick}}</span>\
-                            <img src="img/vtc-m/manager-icon-new.png" v-show="isAdminUser" class="hudong-admin">\
+                            <img src="img/vtc-m/manager-icon-new.png" v-show="" class="hudong-admin">\
                         </div>\
                         <span class="hudong-time">{{item.sendtime}}</span>\
                     </div>\
@@ -37,7 +37,7 @@ var interectCom = Vue.component('interect', {
             </div>\
             <a id="send_message_button" @click="submitClick()" @keypress:enter="submitClick()">发送</a>\
         </div>\
-        <div :class="[\'extend-model\',\'hudongAnimated\',{slideOutRight :!isOpen},{slideInLeft:isOpen}]" >\
+        <div v-show="isAdminUser" :class="[\'extend-model\',\'hudongAnimated\',{slideOutRight :!isOpen},{slideInLeft:isOpen}]" >\
             <div @click="isOpen=!isOpen">{{isOpen?\'>>\':\'<<\'}}</div>\
             <div style="padding: 0px 10px;width:50px;">\
                 <img src="img/sendQueBtn.png" class="extend-qa" @click="sendQuestionnaire()"/>\
@@ -53,7 +53,7 @@ var interectCom = Vue.component('interect', {
             nickname: userInfo.nickname,
             userImage: "pic/default-user-photo.jpg",
             userId: userInfo.userId,
-            isAdminUser: false,
+            isAdminUser: userInfo.isAdminUser,
             isGetOnlineCnt: true,
             onlineCnt: 0,
             isNeedScroll: true, //是否还需要向下滚动
