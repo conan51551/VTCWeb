@@ -1,0 +1,434 @@
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .x-center {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .y-center {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    
+    .xy-center {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+    }
+    
+    #red-packet-bg {
+        width: 100%;
+        height: 100%;
+        z-index: 6000;
+        position: fixed;
+        background: rgba(0, 0, 0, .5);
+        top: 0px;
+    }
+    
+    #redPacket,
+    #redPacketOver,
+    #redPacketList,
+    #sendRedPacket {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+    }
+    
+    .red-loading {
+        position: fixed;
+        z-index: 6001;
+        width: 150px;
+        height: 50px;
+        background: rgba(0, 0, 0, .3);
+        border-radius: 5px;
+        color: white;
+        line-height: 50px;
+        text-align: center;
+    }
+    /*S 打开红包*/
+    
+    #redPacket .main {
+        width: 300px;
+        height: 400px;
+        border-radius: 5px;
+        background: url("../../img/redPacket/main.png") no-repeat;
+        background-size: 300px 400px;
+    }
+    
+    #redPacket .header {
+        font-size: 16px;
+        top: 15%;
+        font-family: "榛戜綋";
+        color: #f5e89d;
+    }
+    
+    #redPacket .desc {
+        text-align: center;
+        top: 30%;
+        width: 90%;
+        overflow: hidden;
+        font-size: 18px;
+        font-family: "榛戜綋";
+        color: #f5e89d;
+    }
+    
+    #redPacket .main .close {
+        position: absolute;
+        width: 11.5px;
+        height: 11.5px;
+        top: 15px;
+        right: 15px;
+        color: #ad4343;
+        background: url("../../img/redPacket/close.png") no-repeat;
+        background-size: 10px 10px;
+    }
+    
+    #redPacket .main .grab {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        border-radius: 60px;
+        text-align: center;
+        line-height: 60px;
+        top: 60%;
+        background: url("../../img/redPacket/open.png") no-repeat;
+        background-size: 60px 60px;
+    }
+    
+    #redPacket .main .showall {
+        width: 100%;
+        text-align: center;
+        bottom: 24px;
+        font-size: 14px;
+        font-family: "榛戜綋";
+        color: #ddd18e;
+    }
+    /*E 打开红包*/
+    /*S 红包抢完了红包*/
+    
+    #redPacketOver .main {
+        width: 300px;
+        height: 400px;
+        border-radius: 5px;
+        background: url("../../img/redPacket/main.png") no-repeat;
+        background-size: 300px 400px;
+    }
+    
+    #redPacketOver .header {
+        font-size: 16px;
+        top: 15%;
+        font-family: "榛戜綋";
+        color: #f5e89d;
+    }
+    
+    #redPacketOver .desc {
+        text-align: center;
+        top: 40%;
+        width: 90%;
+        overflow: hidden;
+        font-size: 18px;
+        font-family: "榛戜綋";
+        color: #f5e89d;
+    }
+    
+    #redPacketOver .main .close {
+        position: absolute;
+        width: 11.5px;
+        height: 11.5px;
+        top: 15px;
+        right: 15px;
+        color: #ad4343;
+        background: url("../../img/redPacket/close.png") no-repeat;
+        background-size: 10px 10px;
+    }
+    
+    #redPacketOver .main .grab {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        border-radius: 60px;
+        text-align: center;
+        line-height: 60px;
+        top: 60%;
+        background: url("../../img/redPacket/open.png") no-repeat;
+        background-size: 60px 60px;
+    }
+    
+    #redPacketOver .main .showall {
+        width: 100%;
+        text-align: center;
+        bottom: 20%;
+        font-size: 14px;
+        font-family: "榛戜綋";
+        color: #ddd18e;
+    }
+    /*E 红包抢完了红包*/
+    /*S 他人的手气*/
+    
+    #redPacketList .main {
+        overflow: hidden;
+        width: 300px;
+        height: 400px;
+        border-radius: 5px;
+        background: white;
+    }
+    /*看到余额的时候*/
+    
+    #redPacketList .header {
+        overflow: hidden;
+        width: 300px;
+        height: 227px;
+        border-radius: 5px;
+        background: url("../../img/redPacket/show.png") no-repeat;
+        background-size: 300px;
+    }
+    
+    #redPacketList .main .header .close {
+        position: absolute;
+        width: 11.5px;
+        height: 11.5px;
+        top: 15px;
+        right: 15px;
+        color: #ad4343;
+        background: url("../../img/redPacket/close.png") no-repeat;
+        background-size: 10px 10px;
+    }
+    
+    #redPacketList .header div {
+        margin-left: auto;
+        margin-right: auto;
+        font-family: "榛戜綋";
+        overflow: hidden;
+        text-align: center;
+    }
+    
+    #redPacketList .main .header .title {
+        width: 90%;
+        font-size: 17px;
+        color: #f5e89d;
+        padding-top: 46px;
+    }
+    
+    #redPacketList .main .header .desc {
+        width: 90%;
+        font-size: 19px;
+        color: #e84141;
+        padding-top: 40px;
+    }
+    
+    #redPacketList .main .header .money {
+        width: 90%;
+        font-size: 30px;
+        color: #414141;
+        padding-top: 10px;
+    }
+    
+    #redPacketList .main .header .tip {
+        width: 90%;
+        font-size: 12px;
+        color: #999999;
+        padding-top: 5px;
+    }
+    
+    #redPacketList .main .userList {
+        margin-top: 25px;
+        width: 100%;
+        height: 150px;
+        text-align: center;
+        overflow: auto;
+        overflow-x: hidden;
+    }
+    
+    #redPacketList .main .userList p {
+        position: absolute;
+        top: 225px;
+        width: 100%;
+        height: 25px;
+        text-align: left;
+        padding-left: 15px;
+        line-height: 28px;
+        font-size: 12px;
+        font-family: "榛戜綋";
+        color: #999999;
+        border-bottom: 1px solid #eeeeee;
+    }
+    
+    #redPacketList .main .userList ul li {
+        list-style: none;
+        width: 100%;
+        padding: 5px;
+        position: relative;
+        height: 40px;
+        border-bottom: 1px solid #f1f1f1;
+    }
+    
+    #redPacketList .main .userList ul li>img {
+        position: absolute;
+        left: 15px;
+        top: 5px;
+        border-radius: 50px;
+    }
+    
+    #redPacketList .main .userList ul li .name {
+        position: absolute;
+        top: 5px;
+        font-size: 12px;
+        color: #333333;
+        left: 65px;
+    }
+    
+    #redPacketList .main .userList ul li .timer {
+        position: absolute;
+        bottom: 2px;
+        font-size: 12px;
+        color: #999999;
+        left: 65px;
+    }
+    
+    #redPacketList .main .userList ul li .money {
+        position: absolute;
+        right: 15px;
+        top: 5px;
+        font-size: 14px;
+        color: #666666;
+    }
+    
+    #redPacketList .main .userList ul li .best {
+        position: absolute;
+        right: 15px;
+        font-size: 14px;
+        bottom: 2px;
+    }
+    
+    #redPacketList .main .userList ul li .best img {
+        float: left;
+        vertical-align: bottom;
+    }
+    
+    #redPacketList .main .userList ul li .best span {
+        font-size: 12px;
+        font-family: "榛戜綋";
+        color: #ffca28;
+        float: right;
+        vertical-align: bottom;
+    }
+    /*E 他人的手气*/
+    /*S 发红包*/
+    
+    #sendRedPacket .main .close {
+        position: absolute;
+        width: 11.5px;
+        height: 11.5px;
+        top: 15px;
+        right: 15px;
+        color: #ad4343;
+        background: url("../../img/redPacket/close.png") no-repeat;
+        background-size: 10px 10px;
+    }
+    
+    #sendRedPacket .main {
+        overflow: hidden;
+        width: 300px;
+        height: 400px;
+        border-radius: 5px;
+        background: #f1f1f1;
+    }
+    
+    #sendRedPacket .main .header {
+        overflow: hidden;
+        width: 300px;
+        height: 30px;
+        background: #e84141;
+    }
+    
+    #sendRedPacket .main .body>div {
+        width: 270px;
+        height: 40px;
+        background: #ffffff;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 30px;
+    }
+    
+    #sendRedPacket .main .body .tip {
+        color: #9b9b9b;
+        width: 270px;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        font-size: 12px;
+        margin-top: 5px;
+        margin-left: 15px;
+    }
+    
+    #sendRedPacket .main .body>div .title {
+        line-height: 40px;
+        padding-left: 15px;
+        color: #111111;
+    }
+    
+    #sendRedPacket .main .body>div>input {
+        line-height: 40px;
+        display: inline-block;
+        float: right;
+        width: 150px;
+        border: none;
+        text-align: right;
+        font-size: 14px;
+        padding-right: 5px;
+    }
+    
+    #sendRedPacket .main .body>div .unit {
+        padding-right: 15px;
+        float: right;
+        line-height: 40px;
+    }
+    
+    #sendRedPacket .main .footer>button {
+        width: 270px;
+        height: 40px;
+        margin-top: 20px;
+        line-height: 40px;
+        border-radius: 3px;
+        background: #e84141;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        border: none;
+        color: #f5e89d;
+        font-size: 17px;
+    }
+    
+    #sendRedPacket .main .footer .tip {
+        color: #a4a4a4;
+        width: 270px;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        font-size: 12px;
+        margin-top: 5px;
+        text-align: right;
+    }
+    
+    #sendRedPacket .main .footer .tip>span {
+        color: #e84141;
+    }
+    /*E 发红包*/
+    
+    .headernoamount {
+        height: 150px !important;
+    }
+    
+    .headerp {
+        top: 150px !important;
+    }
+    
+    .biguserList {
+        height: 225px !important;
+    }

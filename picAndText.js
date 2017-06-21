@@ -171,7 +171,7 @@ var picAndTextCom = Vue.component('picandtext', {
                 result[index].sendTime = result[index].sendTime.split(" ")[1].substring(0, 5);
                 that.picDiv.push(result[index]);
             }
-            if (typeof(result) == "undefined") {
+            if (typeof(result) == "undefined" || result.length < 5) {
                 that.loadMsg = "已经没有更多了";
             } else {
                 that.startIndex++;

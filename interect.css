@@ -160,3 +160,137 @@
     text-decoration: none;
     font-weight: 400;
 }
+
+.chat_arrow_me {
+    color: #666;
+    height: 50px;
+    display: block;
+    position: relative;
+}
+
+.rb_topic {
+    position: absolute;
+    width: 200px;
+    display: block;
+    top: 6px;
+    margin-left: 60px;
+    color: #f0f0f0;
+}
+
+.rb_check {
+    color: #f0f0f0;
+    position: absolute;
+    width: 140px;
+    top: 6px;
+    margin-left: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.que_topic {
+    position: absolute;
+    width: 140px;
+    top: 6px;
+    margin-left: 60px;
+    color: #000000;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.que_check {
+    position: absolute;
+    width: 200px;
+    display: block;
+    top: 25px;
+    margin-left: 60px;
+    color: #000000;
+}
+
+.rb_img {
+    width: 200px;
+    height: 50px;
+}
+
+
+/* 动画 */
+
+.hudongAnimated {
+    -webkit-animation-duration: .5s;
+    animation-duration: .5s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+@-webkit-keyframes slideInLeft {
+    from {
+        right: -60px;
+    }
+    to {
+        right: 0px;
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        right: -60px;
+    }
+    to {
+        right: 0px;
+    }
+}
+
+.slideInLeft {
+    -webkit-animation-name: slideInLeft;
+    animation-name: slideInLeft;
+}
+
+@-webkit-keyframes slideOutRight {
+    from {
+        right: 0;
+    }
+    to {
+        right: -60px;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        right: 0;
+    }
+    to {
+        right: -60px;
+    }
+}
+
+.slideOutRight {
+    -webkit-animation-name: slideOutRight;
+    animation-name: slideOutRight;
+}
+
+#hudong .extend-model {
+    position: absolute;
+    right: 0px;
+    bottom: 50px;
+    z-index: 1020;
+    width: 80px;
+    background-color: transparent;
+}
+
+#hudong .extend-rb {
+    width: 30px;
+    vertical-align: middle;
+    max-width: 35px;
+    margin-top: 10px;
+}
+
+#hudong .extend-qa {
+    width: 30px;
+    vertical-align: middle;
+    max-width: 35px;
+}
+
+#hudong .extend-model>div {
+    display: inline-block;
+}

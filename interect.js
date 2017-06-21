@@ -15,7 +15,17 @@ var interectCom = Vue.component('interect', {
                         </div>\
                         <span class="hudong-time">{{item.sendtime}}</span>\
                     </div>\
-                    <div class="hudong-bottom">{{item.body}}</div>\
+                    <span @click="grabeRB(item.body.split(\'_\')[1])" v-if="item.body.indexOf(\'#rb_\')==0" class="chat_arrow_me">\
+                        <img class="rb_img" src="img/img_RB.png"/>\
+                        <p class="rb_topic">{{item.body.split("_")[2]}}</p>\
+                        <p class="rb_check">查看红包</p>\
+                    </span>\
+                    <span @click="intoQuestion(item.body.split(\'_\')[2])" v-else-if="item.body.indexOf(\'#que_\')==0" class="chat_arrow_me">\
+                        <img class="rb_img" src="img/img_QUE.png"/>\
+                        <p class="que_topic">{{item.body.split("_")[3]}}</p>\
+                        <p class="que_check">查看问卷</p>\
+                    </span>\
+                    <div class="hudong-bottom" v-else>{{item.body}}</div>\
                 </div>\
             </div>\
         </div>\
@@ -25,7 +35,14 @@ var interectCom = Vue.component('interect', {
             <div class="chat_text">\
                 <div id="chat_text" v-text="sendMsg" contenteditable="true" @focus="focusInput" @blur="blurInput" @keyup="divModel($event)" placeholder="说点什么吧~"></div>\
             </div>\
-            <a id="send_message_button" @click="submitClick" @keypress:enter="submitClick">发送</a>\
+            <a id="send_message_button" @click="submitClick()" @keypress:enter="submitClick()">发送</a>\
+        </div>\
+        <div :class="[\'extend-model\',\'hudongAnimated\',{slideOutRight :!isOpen},{slideInLeft:isOpen}]" >\
+            <div @click="isOpen=!isOpen">{{isOpen?\'>>\':\'<<\'}}</div>\
+            <div style="padding: 0px 10px;width:50px;">\
+                <img src="img/sendQueBtn.png" class="extend-qa" @click="sendQuestionnaire()"/>\
+                <img src="img/btn_sendRB.png" class="extend-rb" @click="sendPacket()"/>\
+            </div>\
         </div>\
     </div>\
     ',
@@ -44,9 +61,10 @@ var interectCom = Vue.component('interect', {
             lasttimestamp: "", //最后一条消息的时间戳
             thisHisMsgNum: 0, //获取的历史消息的总数
             isFirstGetHisMsg: true, //是否是第一次去获取历史消息
-            hasMore: "正在加载", //判断是否还有更多的消息
+            hasMore: "上拉加载", //判断是否还有更多的消息
             interectScroll: true, //互动是否在滚动
             scrollTop1: 0,
+            isOpen: true,
         }
     },
     mounted: function() {
@@ -62,7 +80,7 @@ var interectCom = Vue.component('interect', {
             var that = this;
             that.sendMsg = e.target.innerText;
         },
-        submitClick: function() { //发送互动消息
+        submitClick: function(msg) { //发送互动消息
             var that = this;
             now = new Date();
             var mtime = (now.getHours() < 10) ? "0" + now.getHours() : now.getHours();
@@ -71,14 +89,15 @@ var interectCom = Vue.component('interect', {
             var body = that.sendMsg;
 
             // 发送cnd消息
-            if (body != "") {
+            if (body != "" || msg) {
                 var send = {
                     nick: that.nickname,
                     type: 1,
-                    body: that.sendMsg,
+                    body: msg ? msg : that.sendMsg,
                     sendtime: mtime,
                     img: that.userImage,
                     userId: that.userId,
+                    userStatus:userInfo.isAdminUser
                 }
                 that.msgDataArr.push(send);
                 sendDanmu(that.sendMsg, true);
@@ -208,7 +227,7 @@ var interectCom = Vue.component('interect', {
             }
             _this.preventDefault();
             _this.stopPropagation();
-             
+
         },
         loadHisMsgs: function() { //点击更多去加载以前的消息
             var that = this;
@@ -230,9 +249,7 @@ var interectCom = Vue.component('interect', {
                         mtime = that.getDate(mtime);
                         msg.sendtime = mtime;
                         that.msgDataArr.unshift(msg);
-
                     }
-                    $(".hudong").scrollTop(that.scrollTop1);
                     /***获取一页消息后,判断是否还要再请求***/
                     var contentTextHeight = 0;
                     for (var x = 0; x < that.thisHisMsgNum; x++) {
@@ -244,14 +261,11 @@ var interectCom = Vue.component('interect', {
                             //当历史聊天内容不足以填满全部聊天框之后,再向前请求一次聊天内容
                             interect.gethisMsg();
                         } else {
+                            $(".hudong").scrollTop($(".hudong")[0].scrollHeight - that.scrollTop1);
                             that.scrollTop1 = $(".hudong")[0].scrollHeight;
                             that.thisHisMsgNum = 0; //够一页就清零
                             if (that.isNeedScroll) {
                                 that.sc();
-                            }
-                            if (that.isFirstGetHisMsg) {
-                                $("#hudong").scrollTop($("#hudong")[0].scrollHeight);
-                                that.isFirstGetHisMsg = false;
                             }
                         }
                     }
@@ -273,6 +287,7 @@ var interectCom = Vue.component('interect', {
             if (navigator.userAgent.match(/(iPad|iPhone|iPod)/g)) {
                 setTimeout(function() {
                     $('.chatTextPar').css("margin-bottom", "50px");
+                    $('.extend-model').css("bottom", "100px");
                 }, 100);
             }
         },
@@ -280,8 +295,33 @@ var interectCom = Vue.component('interect', {
             if (navigator.userAgent.match(/(iPad|iPhone|iPod)/g)) {
                 setTimeout(function() {
                     $('.chatTextPar').css("margin-bottom", "0px");
+                    $('.extend-model').css("bottom", "50px");
                 }, 100);
             }
+        },
+        grabeRB(rbId) {
+            redPacket.showGrap(rbId);
+        },
+        sendPacket() {
+            redPacket.showSend();
+        },
+        //发送问卷的方法
+        sendQuestionnaire() {
+            questionnaire.showSendQue();
+        },
+        //跳转问卷的方法
+        intoQuestion(_qid) {
+            $.ajax({
+                url: "ajx/wen_selectUserCommit.do",
+                data: "qid=" + _qid + "&userId=" + userInfo.userId,
+                success: function(response) {
+                    if (!response.data) {
+                        window.location.href = "showQuestionnaire.html?groupId=" + videoInfo.groupId + "&queId=" + _qid + "&show=0&userId=" + userInfo.userId + "&rid=" + videoInfo.rid;
+                    } else {
+                        alert("您已参与过本次问卷");
+                    }
+                }
+            });
         }
     },
     watch: {

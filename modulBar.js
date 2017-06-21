@@ -11,8 +11,7 @@ Vue.component('modubar', {
             modelId: [], //各个模块的ID
         }
     },
-    mounted: function() {
-    },
+    mounted: function() {},
     created: function() {
 
     },
@@ -21,10 +20,10 @@ Vue.component('modubar', {
             var that = this;
             that.selectTab = _index;
             models.selectModel = _index;
-            if(_index == 2){
-                models.$refs.pat.queryPicAndText();
-            }else if(_index == 6){
-                models.$refs.introduce.queryIntroduce();
+            if (_index == 2) {
+                models.$refs.pat && models.$refs.pat.queryPicAndText();
+            } else if (_index == 6) {
+                models.$refs.introduce && models.$refs.introduce.queryIntroduce();
             }
         },
         getRecordTabsInfo: function() {
@@ -34,7 +33,7 @@ Vue.component('modubar', {
                     var tabArr = recordInfo.tabsName.split(",");
                     var tabsNameArr = tabArr.splice(0, 5);
                     tabsNameArr.splice(1, 0, tabArr[0]);
-                    tabsNameArr.map(function(item,index) {
+                    tabsNameArr.map(function(item, index) {
                         modelJson[index].name = item;
                     })
                 }
