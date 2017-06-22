@@ -73,3 +73,7 @@ Vue.component('questionnaire', {
 new Vue({
     el: '#vtcQuestionnaire'
 });
+// $(".extend-model").append("<div id='vtcRedPacket'>\
+//                                 <red-packet></red-packet>\
+//                             </div>\
+//                         ");

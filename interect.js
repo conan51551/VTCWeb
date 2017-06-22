@@ -30,26 +30,17 @@ var interectCom = Vue.component('interect', {
             </div>\
         </div>\
         <div class="chatTextPar">\
-            <img src="img/btn_sendRB.png" class="hudong-fav" style="display:none;"/>\
             <img src="img/vtc-m/favour.png" class="hudong-fav"/>\
             <div class="chat_text">\
-                <div id="chat_text" v-text="sendMsg" contenteditable="true" @focus="focusInput" @blur="blurInput" @keyup="divModel($event)" placeholder="说点什么吧~"></div>\
+                <div id="chat_text" contenteditable="true" @focus="focusInput" @blur="blurInput" placeholder="说点什么吧~"></div>\
             </div>\
             <a id="send_message_button" @click="submitClick()" @keypress:enter="submitClick()">发送</a>\
-        </div>\
-        <div v-show="isAdminUser" :class="[\'extend-model\',\'hudongAnimated\',{slideOutRight :!isOpen},{slideInLeft:isOpen}]" >\
-            <div @click="isOpen=!isOpen">{{isOpen?\'>>\':\'<<\'}}</div>\
-            <div style="padding: 0px 10px;width:50px;">\
-                <img src="img/sendQueBtn.png" class="extend-qa" @click="sendQuestionnaire()"/>\
-                <img src="img/btn_sendRB.png" class="extend-rb" @click="sendPacket()"/>\
-            </div>\
         </div>\
     </div>\
     ',
     data() {
         return {
             msgDataArr: [],
-            sendMsg: "",
             nickname: userInfo.nickname,
             userImage: "pic/default-user-photo.jpg",
             userId: userInfo.userId,
@@ -78,7 +69,6 @@ var interectCom = Vue.component('interect', {
     methods: {
         divModel: function(e) { //点击输入框事件
             var that = this;
-            that.sendMsg = e.target.innerText;
         },
         submitClick: function(msg) { //发送互动消息
             var that = this;
@@ -86,27 +76,27 @@ var interectCom = Vue.component('interect', {
             var mtime = (now.getHours() < 10) ? "0" + now.getHours() : now.getHours();
             mtime += ":";
             mtime += (now.getMinutes() < 10) ? "0" + now.getMinutes() : now.getMinutes();
-            var body = that.sendMsg;
+            var body = $("#chat_text").text()
 
             // 发送cnd消息
             if (body != "" || msg) {
                 var send = {
                     nick: that.nickname,
                     type: 1,
-                    body: msg ? msg : that.sendMsg,
+                    body: msg ? msg : body,
                     sendtime: mtime,
                     img: that.userImage,
                     userId: that.userId,
                     userStatus:userInfo.isAdminUser
                 }
                 that.msgDataArr.push(send);
-                sendDanmu(that.sendMsg, true);
+                sendDanmu(body, true);
                 that.sc(); //每发一条消息，滚动到最新的消息
                 if (netimobj) {
                     netimobj.sendmsg(send,
                         function(res) {
                             console.log("Send message successfully");
-                            that.sendMsg = "";
+                            $("#chat_text").text("");
                         },
                         function(code) {
                             console.log("Send message failed");

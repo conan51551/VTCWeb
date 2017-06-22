@@ -24,6 +24,8 @@ Vue.component('modubar', {
                 models.$refs.pat && models.$refs.pat.queryPicAndText();
             } else if (_index == 6) {
                 models.$refs.introduce && models.$refs.introduce.queryIntroduce();
+            }else if(_index == 4){
+                models.$refs.queAndAns && models.$refs.queAndAns.queryQaList();
             }
         },
         getRecordTabsInfo: function() {
@@ -76,7 +78,7 @@ Vue.component('modubar', {
                             }
                         }
                     })
-                    loadModels.initModel(showIndex);
+                    loadModels.initModel(showIndex);//创建Vue对象
                 }
             }
         }

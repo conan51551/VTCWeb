@@ -98,7 +98,7 @@ Vue.component('redPacket', {
                 topic: "VTC的大红包",
                 description: "恭喜发财,大吉大利",
                 amount: 0, //总金额
-                count: 0//总个数
+                count: 0 //总个数
             }, //红包信息
             rpb: {
                 amount: '',
@@ -314,9 +314,6 @@ Vue.component('redPacket', {
 
 });
 
-new Vue({
-    el: '#vtcRedPacket'
-});
 
 //封装传参数的方法  兼容性写法
 function searchParams(obj, name) {
@@ -353,7 +350,7 @@ function copy(obj) {
     return newobj;
 }
 
-//事件格式化
+//时间格式化
 Date.prototype.Format = function(fmt) { //author: meizz 
     var o = {
         "M+": this.getMonth() + 1, //月份 
@@ -369,3 +366,12 @@ Date.prototype.Format = function(fmt) { //author: meizz
         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
 }
+
+new Vue({
+    el: '#vtcRedPacket'
+});
+
+// $(".extend-model").append("<div id='vtcRedPacket'>\
+//                                 <red-packet ref='redPacket'></red-packet>\
+//                             </div>\
+//                         ");

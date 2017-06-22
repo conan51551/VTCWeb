@@ -15,24 +15,32 @@
     <title>VTC云直播</title>
     <link rel="stylesheet" href="vue/m.css">
     <link href="favicon.ico" rel="icon" type="image/x-icon" />
-    <!--CDN 取Vue得文件-->
-    <script src="//cdn.bootcss.com/vue/2.3.3/vue.min.js"></script>
+
+    <!--CDN 取Vue得文件 -->
+    <script src="//cdn.bootcss.com/vue/2.3.3/vue.js"></script>
     <!--CDN失败走本地-->
     <script type="text/javascript">
         window.Vue || document.write('<script src="vue/vue.min.js" type="text/javascript">\x3C/script>')
     </script>
+
     <!--CDN 取jquery得文件-->
     <script src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
-    <script type="text/javascript" src="js/artEditor.js"></script>
+
     <!--CDN失败走本地-->
     <script type="text/javascript">
-        window.jQuery || document.write('<script src="js/jquery-2.1.3.min.js?version=1" type="text/javascript">\x3C/script>')
+        window.jQuery || document.write(
+            '<script src="js/jquery-2.1.3.min.js?version=1" type="text/javascript">\x3C/script>')
     </script>
     <script src="/LiveVideoServer/js/netim.vtc.js" type="text/javascript"></script>
+    <link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
 </head>
 <style>
+    body {
+        overflow: hidden;
+    }
+    
     .videopalyer {
-        border: 1px solid #FFB101;
+        border: 1px solid #FFB101 !important;
     }
 </style>
 
@@ -42,13 +50,14 @@
         <div class="video-box display-flex">
             <div :style="{height:videoBox+'px'}">
                 <!--:style="'background-image:url('+videoInfo.videoPoster+')'"-->
-                <video :src="videoInfo.videoUrl" :poster="videoInfo.videoPoster" autoplay x5-video-player-type="h5" x5-video-player-fullscreen="true" x5-video-orientation="portrait|landscape" height="100%" webkit-playsinline="true" x5nativepanel="" width="100%" preload="none" playsinline="true"
-                    @timeupdate="timeupdate" x-webkit-airplay="allow" @loadstart="loadstart" @canplay="canplay" @play="controlsChange" @pause="controlsChange">{{errorMsg}}</video>
+                <video :src="videoInfo.videoUrl" :poster="videoInfo.videoPoster" autoplay x5-video-player-type="h5" x5-video-player-fullscreen="true" x5-video-orientation="portrait|landscape" height="100%" webkit-playsinline="true" x5nativepanel="" width="100%" preload="none"
+                    playsinline="true" @timeupdate="timeupdate" x-webkit-airplay="allow" @loadstart="loadstart" @canplay="canplay" @play="controlsChange" @pause="controlsChange">{{errorMsg}}</video>
                 <!--视频控制条-->
-                <video-controls ref="controls" :liveFlag="videoInfo.liveFlag"></video-controls>
+                <video-controls ref="controls" :live-flag="videoInfo.liveFlag"></video-controls>
+                <div id="danmu"></div>
             </div>
             <!--多路直播-->
-            <div id='slide_liveVideo' v-show="videos.length>0">
+            <div id='slide_liveVideo' v-show="videos.length>1">
                 <template v-for="(item,index) in videos">
                     <div :class="['blockinline', 'liveVideo',{ videopalyer :item.videoId == videoInfo.videoId}]" @click="palyVideo(item.videoId)">
                         <img class='video_preview' :src="item.previewPic">
@@ -58,12 +67,19 @@
                 </template>
             </div>
         </div>
-
         <!--扩展模块-->
         <modubar ref="bar"></modubar>
         <div id="extendModel" class="extend-model display-flex">
-            <!--<p v-show="loadModels" class="model-msg">模块加载中...</p>-->
+            <p id="loadModels" class="model-msg">网络开小差,模块拼命加载中...</p>
         </div>
+    </div>
+    <!--红包-->
+    <div id="vtcRedPacket">
+        <red-packet></red-packet>
+    </div>
+    <!--问卷-->
+    <div id="vtcQuestionnaire">
+        <questionnaire></questionnaire>
     </div>
 </body>
 
@@ -74,8 +90,13 @@
 <!--touchBar-->
 <script src="vue/modulBar/modulBar.js" type="text/javascript"></script>
 <link rel="stylesheet" href="vue/modulBar/modulBar.css">
+
+<!--弹幕-->
+<script src="js/danmu.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/lrz.mobile.min.js"></script>
+<script src="js/artEditor.js"></script>
 <script>
-    //全局模块配置文件
+    //全局模块配置信息
     var modelJson = [{
         id: 1,
         name: "互动",
@@ -83,13 +104,57 @@
         jsPath: 'vue/hudong/interect.js',
         cssPath: 'vue/hudong/interect.css'
     }, {
+        id: 6,
+        name: "介绍",
+        ref: "introduce",
+        jsPath: 'vue/introduce/introduce.js',
+        cssPath: 'vue/picAndText/picAndText.css'
+    }, {
         id: 2,
         name: "图文",
         ref: "pat",
         jsPath: 'vue/picAndText/picAndText.js',
         cssPath: 'vue/picAndText/picAndText.css'
+    }, {
+        id: 3,
+        name: "简介",
+        ref: "info",
+        jsPath: 'vue/videoInfo/videoInfo.js',
+        cssPath: 'vue/videoInfo/videoInfo.css'
+    }, {
+        id: 4,
+        name: "问答",
+        ref: "queAndAns",
+        jsPath: 'vue/queAndAnswer/queAndAnswer.js',
+        cssPath: 'vue/queAndAnswer/queAndAnswer.css'
+    }, {
+        id: 5,
+        name: "签到",
+        ref: "info",
+        jsPath: 'vue/',
+        cssPath: 'vue/'
     }];
 
+    //全局管理员模块配置信息
+    var adminModelJson = [{
+        id: 801,
+        name: "红包",
+        ref: "redpacket",
+        jsPath: 'vue/redPacket/redPacket.js',
+        cssPath: 'vue/redPacket/redPacket.css'
+    }, {
+        id: 802,
+        name: "问卷",
+        ref: "questionnaire",
+        jsPath: 'vue/question/sendQuestionnaire.js',
+        cssPath: 'vue/question/sendQuestionnaire.css'
+    }, {
+        id: 803,
+        name: "抽奖",
+        ref: "",
+        jsPath: '',
+        cssPath: ''
+    }];
     /*
      *返回模块的ref
      *param : modelId 模块ID
@@ -108,9 +173,11 @@
         loadNum: 0, //加载的模块数量
         finish: 0, //一级加载完成的模块
         initModel: initModel, //模块加载完成后初始化vue对象
-        timeOut: 5000, //模块加载超时时间
+        timeOut: 2000, //模块加载超时时间
         freshTime: 100, //定时检查间隔
     }
+
+    var timeoutForCache = 10000; //CDN取文件的定时器 单位毫秒
 
     //所有模块统一的Vue对象
     var models;
@@ -121,12 +188,15 @@
             //模块全部加载完成或者超时
             if (loadModels.loadNum == loadModels.finish || times >= (loadModels.timeOut / loadModels.freshTime)) {
                 clearInterval(initTime)
+                $("#loadModels").remove();
                 models = new Vue({
                     el: '#extendModel',
                     data: {
                         selectModel: 1 //初始化旋转模块是1
                     }
                 })
+                player.$refs.bar.changeTab(_index);
+                danmuInit();
                 console.log("模块初始化完成...")
             }
             times++;
@@ -157,6 +227,7 @@
     //多路直播视频信息
     var videos = [];
 
+    //域名
     var hostname = location.hostname;
     //获取用户昵称
     var randomStr = randomString(6, true);
@@ -188,10 +259,8 @@
         mounted: function() {
             var that = this;
             getRidInfo(); //获取场次信息
-            //TODO del 
-            getVideoInfo()
-                //计算视频高度
-            var ww = $(window).width();
+            //计算视频高度
+            var ww = $("video").width();
             that.videoBox = ww * (9 / 16);
         },
         methods: {
@@ -203,18 +272,20 @@
             timeupdate() {
                 this.$refs.controls && this.$refs.controls.timeupdate();
             },
+            //视频开始load的事件 (安卓微信无效)
             loadstart() {
                 this.$refs.controls && this.$refs.controls.loadstart();
             },
+            //视频能不能播放事件 (安卓微信无效)
             canplay() {
                 this.$refs.controls && this.$refs.controls.canplay();
             },
-            //获取视频的播放地址
+            //获取视频的缩略图
             queryVideoPoster() {
                 $.ajax({
                     type: "POST",
                     url: "ajx/VideoPostPic.do",
-                    data: "option=query&rid=" + GetQueryString("rid"),
+                    data: "option=query&rid=" + videoInfo.rid,
                     success: function(res) {
                         if (res.code == 0) {
                             video.poster = res.data;
@@ -222,13 +293,10 @@
                     },
                 });
             },
-            //获取导播视频信息
-            queryVideoUrl: function() {
-                getVideoInfo();
-            },
             //多路播放某一条视频
             palyVideo(videoID) {
-                alert('播放' + videoID)
+                var url = location.href;
+                location.href = url.replace("videoId=" + videoInfo.videoId, "videoId=" + videoID)
             }
 
         }
@@ -237,10 +305,10 @@
     //1 获取场次相关信息
     //设置功能模块订制
     function getRidInfo() {
-        var url;
-        var preData;
-        var isPreview = GetQueryString("isPreview");
-        if (isPreview == "preview") {
+        var url; //ajax请求url
+        var preData; //ajax请求参数
+        var isPreview = GetQueryString("isPreview") == 'preview'; // 判断是不是预览
+        if (isPreview) {
             url = "ajx/ssdb_vtcHget.do";
             preData = "key=LIVEGROUP:RECORD:" + rid;
         } else {
@@ -251,74 +319,41 @@
             type: "get",
             data: preData,
             dataType: "json",
-            success: function(res) {
-                recordInfo = res;
-                player.$refs.bar.getRecordTabsInfo();
-                var m = 0;
-                var tabs;
-                var tabsName;
-                if (isPreview == "preview") {
-                    tabs = res.tabs;
-                    tabsName = res.tabsName;
+            success: function(result) {
+                var res; //返回的数据
+                if (isPreview) {
+                    res = result.data;
                 } else {
-                    tabs = res.tabs;
-                    tabsName = res.tabsName;
+                    res = result;
                 }
+
+                //赋值给全局变量
+                recordInfo = res;
+                //调用bar加载对应的模块
+                player.$refs.bar.getRecordTabsInfo();
+
+                var m = 0;
+                var tabs = res.tabs; //模块开关
+                var tabsName = res.tabsName; //模块名称
                 if (tabs != null && tabs != "" && tabs && tabs.length != 9) { //当没有第六位数字时，按照以前的设置来
                     var adMsgTab = tabs.substr(tabs.length - 3, 1);
                     tabs = tabs.substring(0, tabs.length - 4);
                     if (adMsgTab != 0) {
-                        // queryAdMsg(); //根据模块的信息，判断是否显示轮播广告
-                        console.log("轮播")
+                        //加载轮播模块
+                        loadStyles("vue/adBanner/adBanner.css");
+                        loadScript("vue/adBanner/adBanner.js");
+                        console.log("加载轮播")
                     }
                 }
-
-                if (videoInfo.groupId == 731) {
-                    tabs = "1,0,3,0,0";
-                }
-                if (tabs == null || tabs == "" || tabs == "null") {
-                    for (var i = 0; i < 5; i++) {
-                        var tabsIndex = "tab" + (i + 1).toString();
-                        $("#" + tabsIndex).show();
-                    }
-                } else {
-                    var modulationArr = tabs.split(",");
-                    console.log("modulationArr=" + modulationArr)
-                    var tabsNameArr = [];
-                    if (tabsName != null && tabsName != "" && tabsName != "null") {
-                        tabsNameArr = tabsName.split(",");
-                    }
-                    for (var i = 0; i < tabsNameArr.length; i++) {
-                        var tabsIndex = "tab" + (i + 1).toString();
-                        $("#" + tabsIndex).html(tabsNameArr[i]);
-                    }
-
-                    for (var i = 0; i < modulationArr.length; i++) {
-                        if (modulationArr[i] != "0") {
-                            var tabsIndex = "tab" + (i + 1).toString();
-                            $("#" + tabsIndex).show();
-                            m = m + 1;
-                        }
-                    }
-                    var modulationArr1 = modulationArr.filter(function(item, index) {
-                        return item != 0;
-                    })
-                    if (!modulationArr1.length) {
-                        var videBox = $(window).width();
-                        $('.bottom-box').css('margin-top', $(".fix-top").height() || 0);
-                    }
-                    for (var i = 0; i < modulationArr.length; i++) {
-                        if (modulationArr[i] != "0") {
-                            break;
-                        }
-                    }
-                }
-
+                loadStyles(adminModelJson[0].cssPath);
+                loadScript(adminModelJson[0].jsPath);
+                loadStyles(adminModelJson[1].cssPath);
+                loadScript(adminModelJson[1].jsPath);
                 //设置直播类型
                 videoInfo.liveWay = res.liveWay;
+                getVideoInfo(); //获取视频信息
                 if (videoInfo.liveWay == 1) {
                     console.log("导播视频")
-                    getVideoInfo();
                 } else if (videoInfo.liveWay == 2) {
                     console.log("并行视频")
                     getLiveVideo4Parell();
@@ -326,7 +361,7 @@
             }
         })
     }
-    //2.1 导播->视频获取视频相关信息
+    //2.1 获取视频相关信息
     function getVideoInfo() {
         $.ajax({
             "url": queryFilePath() + "/videos/" + videoInfo.videoId + ".json",
@@ -347,7 +382,7 @@
                     } else {
                         var url4live = video.URL;
                     }
-
+                    //获取视频分节点
                     var vDomain = quertVDomain();
                     if (url4live.toLowerCase().indexOf("http") != 0) {
                         if (url4live.indexOf("/") == 0) {
@@ -356,20 +391,23 @@
                             url4live = "http://" + vDomain + "/LiveVideoServer/" + url4live;
                         }
                     }
-                    videoInfo.videoUrl = url4live + "?randomStr=" + parseInt((new Date()).getTime() / 300000);
+                    videoInfo.videoUrl = url4live + "?randomStr=" + parseInt((new Date()).getTime() /
+                        300000);
                     videoInfo.videoPoster = "http://" + location.hostname + "/" + video.previewPic;
+
+                    //判断是不是安卓 安卓视频poster有问题 不能铺满 采用background替代
                     if (!navigator.userAgent.match(/(iPad|iPhone|iPod)/g)) {
                         if (isWeixin()) {
                             videoInfo.videoPoster = '';
-                            $("video").css("background-image", "url(http://" + location.hostname + "/" + video.previewPic + ")")
+                            $("video").css("background-image", "url(http://" + location.hostname + "/" +
+                                video.previewPic + ")")
                         }
                     }
                 }
 
-                var title = video.title;
+                var title = video.title; //视频标题
                 var titSpan = document.createElement('span');
                 titSpan.innerHTML = title;
-
                 if (title == '无标题' || title == '') {
                     title = "VTC云直播";
                 } else {
@@ -377,6 +415,7 @@
                 }
                 document.title = titSpan.innerText + ' by VTC云直播';
                 parent.document.title = titSpan.innerHTML + ' by VTC云直播';
+
             },
             "error": function(res) {
                 if (res.status == "404") {
@@ -384,15 +423,6 @@
                 }
             }
         });
-    }
-
-    function isWeixin() {
-        var ua = navigator.userAgent.toLowerCase();
-        if (ua.match(/MicroMessenger/i) == "micromessenger") {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     //2.2 并行直播->判断其视频直播状态以及哪些视频正在直播 (轮询)
@@ -426,26 +456,11 @@
                     for (key in videoStr) {
                         //TODO 优化添加流程
                         _videos.push({
-                            videoId: key,
+                            videoId: videoStr[key].videoId,
                             previewPic: videoStr[key].previewPic
                         });
                     }
-                    videos = _videos;
-                    // if (videos.length > 1 && needPosition) {
-                    //     for (var i = 0; i < videos.length; i++) {
-                    //         var vid = videos[i].videoId;
-                    //         if (videoId == vid) {
-                    //             if (i >= video_length && startNum == 0) {
-                    //                 var pageNum = Math.floor(i / video_length);
-                    //                 startNum = video_length * pageNum;
-                    //             }
-                    //         }
-                    //     }
-                    // }
-                    // var length = startNum + video_length;
-                    // if (length > videos.length) {
-                    //     length = videos.length;
-                    // }
+                    player.videos = _videos;
                 }
             }
         });
@@ -457,40 +472,35 @@
 
     // 同城播放器事件
     window.onresize = function() {
-        var video = document.querySelector("video");
-        video.style.width = window.innerWidth + "px";
-        video.style.height = window.innerHeight + "px";
-        // if(!video.paused){
-        //     var wh = $(window).height();
-        //     var sl = videos.length > 0 ? 55 : 0;
-        //     elHight.extendModel = wh - elHight.videoBox - sl;
-        //     $("#vtcInterectMod").height(elHight.extendModel - 30);
-        //     if(models.interect){
-        //         models.interect.calcHDHeight();
-        //     }
-        // }
+        if (isWeixin()) {
+            var video = document.querySelector("video");
+            video.style.width = window.innerWidth + "px";
+            video.style.height = window.innerHeight + "px";
+        }
     }
 
     //搞笑的旋转事件 先这么用着
     $(window).bind('orientationchange', function(e) {
         if (window.orientation == 180 || window.orientation == 0) {
             $("#extendModel").show();
-            $('body').removeClass("landscape")
-            $('#player').removeClass("landscape")
-            $('.video-box').removeClass("landscape")
-            $('video').removeClass("landscape")
-            $('.video-box>div').removeClass("landscape")
-            $('#videoControls').removeClass("landscape")
+            $("#tabs").show();
+            $('body,#player,.video-box,video,.video-box>div,#videoControls').removeClass("landscape")
         } else if (window.orientation == 90 || window.orientation == -90) {
             $("#extendModel").hide();
-            $('body').addClass("landscape")
-            $('#player').addClass("landscape")
-            $('.video-box').addClass("landscape")
-            $('video').addClass("landscape")
-            $('.video-box>div').addClass("landscape")
-            $('#videoControls').addClass("landscape")
+            $("#tabs").hide();
+            $('body,#player,.video-box,video,.video-box>div,#videoControls').addClass("landscape")
         }
     });
+
+    //判断是不是微信
+    function isWeixin() {
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.match(/MicroMessenger/i) == "micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     //获取视频播放的host地址
     function quertVDomain() {
@@ -591,18 +601,113 @@
         document.getElementsByTagName("head")[0].appendChild(link);
     }
 
-    $('#player').on('touchmove touchstart', function(event) {
-        event.stopPropagation();
-    });
+    //CDN 取文件缓存时间
+    var cacheTime = 0;
+
+    function cacheTimeout(_url) {
+        var now = new Date().getTime();
+        if (!cacheTime) {
+            cacheTime = now;
+            return _url + "?_=" + now;
+        } else if (now - cacheTime > timeoutForCache) {
+            cacheTime = now;
+            return _url + "?_=" + now;
+        }
+        return _url;
+    }
+
+
+    /*****************************************************************************/
+    //全局弹幕层对象
+    var $danmu = $("#danmu");
+
+    //弹幕功能初始化
+    function danmuInit() {
+        $danmu.danmu({
+            top: 40,
+            height: player.videoBox - 40, //弹幕区高度
+            width: '100%', //弹幕区宽度
+            zindex: 1000, //弹幕区域z-index属性
+            speed: 8000, //滚动弹幕的默认速度，这是数值值得是弹幕滚过每672像素所需要的时间（毫秒）
+            sumTime: 66666, //弹幕流的总时间
+            danmuLoop: false, //是否循环播放弹幕
+            defaultFontColor: "#FFFFFF", //弹幕的默认颜色
+            fontSizeSmall: 14, //小弹幕的字号大小
+            FontSizeBig: 18, //大弹幕的字号大小
+            opacity: "0.9", //默认弹幕透明度
+            topBottonDanmuTime: 6000, // 顶部底部弹幕持续时间（毫秒）
+            SubtitleProtection: false, //是否字幕保护
+            positionOptimize: false, //是否位置优化，位置优化是指像AB站那样弹幕主要漂浮于区域上半部分
+            maxCountInScreen: 40, //屏幕上的最大的显示弹幕数目,弹幕数量过多时,优先加载最新的。
+            maxCountPerSec: 10 //每分秒钟最多的弹幕数目,弹幕数量过多时,优先加载最新的。
+        });
+        $danmu.danmu('danmuResume');
+    }
+
+    //弹幕消息过滤数组
+    var ignoreMsg = ["#rb_", "#qa_", "傻逼", "卡"];
+    /*发送弹幕
+        msg:弹幕内容        *必须
+        isnew:当出现该属性时（属性值可为任意），会认为这是用户新发的弹幕，从而弹幕在显示的时候会有边框
+        position: 弹幕位置  默认0为滚动,1为顶部,2为底部
+        size:弹幕字体大小    默认0为小字,1为大字
+    */
+    function sendDanmu(msg, isnew, position, size) {
+        if (!ignore(msg)) {
+            return false;
+        }
+        var time = $danmu.data("nowTime") + 5;
+        var danmuObj = {
+            text: msg,
+            color: randomColor(),
+            size: size || 0,
+            position: position || 0,
+            time: time
+        }
+        if (isnew) {
+            danmuObj.isnew = isnew;
+        }
+        $danmu.danmu("addDanmu", danmuObj);
+    }
+
+    //过滤方法
+    function ignore(msg) {
+        for (var key in ignoreMsg) {
+            if (msg.indexOf(ignoreMsg[key]) >= 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+    //停止弹幕功能
+    function stopOrStartDanmu() {
+        var $danmu = $('#danmu');
+        if ($danmu.data("nowTime") == 0) {
+            console.log('启用弹幕功能');
+            $danmu.danmu('danmuResume');
+        } else {
+            console.log('停用弹幕功能');
+            $danmu.danmu('danmuStop');
+        }
+    }
+
+    //随机弹幕颜色
+    function randomColor() {
+        //弹幕颜色数组
+        var colorArr = ["#FF0000", "#EEC900", "#F0FFFF", "#9AC0CD", "#7CCD7C", "#87CEFF", "#FFA500"];
+        return colorArr[parseInt(Math.random() * colorArr.length)]
+    }
 </script>
 <script>
     // var isc = true;
-    // setInterval(function(){
-    //     interect.nickname = isc ? '我是范俊声' : "我是黄友伟!!";
-    //     interect.sendMsg = isc ? '你瞅啥!' : "瞅你咋地!!";
-    //     isc = !isc ;
-    //     interect.submitClick();
-    // },1000)
+    // setInterval(function() {
+    //     // var nickname = isc ? '我是范俊声' : "我是黄友伟!!";
+    //     // var sendMsg = isc ? '你瞅啥!' : "瞅你咋地!!";
+    //     // isc = !isc;
+    //     // // interect.submitClick();
+    //     // sendDanmu(nickname, false, 2)
+    //     sendDanmu('傻逼徐浩!!')
+    // }, 10)
 </script>
 
 </html>

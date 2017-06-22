@@ -2,6 +2,7 @@
     height: 100%;
     flex: 1;
     flex-direction: column;
+    font-size: 12px;
 }
 
 .loadHisMsgs {
@@ -170,22 +171,22 @@
 
 .rb_topic {
     position: absolute;
-    width: 200px;
-    display: block;
-    top: 6px;
-    margin-left: 60px;
-    color: #f0f0f0;
-}
-
-.rb_check {
-    color: #f0f0f0;
-    position: absolute;
     width: 140px;
     top: 6px;
     margin-left: 60px;
+    color: #f0f0f0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.rb_check {
+    position: absolute;
+    width: 200px;
+    display: block;
+    top: 25px;
+    margin-left: 60px;
+    color: #f0f0f0;
 }
 
 .que_topic {

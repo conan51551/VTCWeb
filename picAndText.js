@@ -166,15 +166,18 @@ var picAndTextCom = Vue.component('picandtext', {
         showPicAndText: function() {
             var that = this;
             var result = that.totalPic[that.startIndex];
-            for (index in result) {
-                result[index].content = decodeURI(result[index].content);
-                result[index].sendTime = result[index].sendTime.split(" ")[1].substring(0, 5);
-                that.picDiv.push(result[index]);
-            }
-            if (typeof(result) == "undefined" || result.length < 5) {
-                that.loadMsg = "已经没有更多了";
-            } else {
+            if (typeof(result) != "undefined") {
+                for (index in result) {
+                    try {
+                        result[index].content = decodeURI(result[index].content);
+                    } catch (e) {}
+                    result[index].sendTime = result[index].sendTime.split(" ")[1].substring(0, 5);
+                    that.picDiv.push(result[index]);
+                }
                 that.startIndex++;
+            }
+            if (typeof(result) == "undefined") {
+                that.loadMsg = "已经没有更多了";
             }
             that.scrollFlag = true;
         },
@@ -257,7 +260,6 @@ var picAndTextCom = Vue.component('picandtext', {
 });
 
 function useArtEdit() {
-    "use strict";
     $("#content").artEditor({
         imgTar: '#imageUpload',
         limitSize: 5, // MB
@@ -267,7 +269,7 @@ function useArtEdit() {
             vid: videoInfo.videoId
         },
         uploadField: 'image',
-        placeholader: '<p>请输入文章正文内容</p>',
+        placeholader: '',
         validHtml: ["<br/>"],
         formInputId: 'target',
         uploadSuccess: function(res) {
