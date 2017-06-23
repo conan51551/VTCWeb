@@ -22,7 +22,7 @@ var picAndTextCom = Vue.component('queandanswer', {
                     <div class="answer-div" v-for="(item1, index1) in item.answers">\
                         <span @click="deleteAns(item1.tid)">\
                             <a v-text="item1.a_nickname" :style="{color:(item1.a_role==admin?\'#1eb2ff\':\'#000\')}"></a>\
-                            <a :style="{color:(item1.a_role==admin?\'#1eb2ff\':\'#fff\')}">&nbsp;:&nbsp;</a>\
+                            <a :style="{color:(item1.a_role==admin?\'#1eb2ff\':\'#000\')}">&nbsp;:&nbsp;</a>\
                         </span>\
                         <a style="line-height: 16px;" v-text="item1.answer"></a>\
                     </div>\
@@ -129,7 +129,7 @@ var picAndTextCom = Vue.component('queandanswer', {
             var nickname = that.nickname;
             var userStatus = that.isAdminUser ? "admin" : "tourist";
             var answerTid = that.questionId;
-            if (vid != null && vid != "" && userId != null && userId != "" && nickname != null && nickname != "" && commitAns != null && commitAns != "") {
+            if (vid != null && vid != "" && userId != null && nickname != null && nickname != "" && commitAns != null && commitAns != "") {
                 var data1 = "answer.qid=" + answerTid + "&answer.a_userId=" + userId + "&answer.a_nickname=" + nickname + "&answer.answer=" + commitAns + "&answer.a_role=" + userStatus;
                 $.ajax({
                     "url": "ajx/answer.do",
@@ -151,7 +151,7 @@ var picAndTextCom = Vue.component('queandanswer', {
         },
         deleteQue: function(_qId) { //删除问题
             var that = this;
-            data1 = "qa.tid=" + _qTid;
+            data1 = "qa.tid=" + _qId;
             if (confirm("是否确认删除问题?")) {
                 $.ajax({
                     "url": "ajx/delete.do",
@@ -192,6 +192,7 @@ var picAndTextCom = Vue.component('queandanswer', {
         convertTime: function(time) {
             var result;
             var timeStr = time.replace("T", " ");
+            timeStr = timeStr.replace(new RegExp(/-/g),"/");//iphone时间问题
             time = new Date(timeStr);
             var now = new Date();
             var diff = parseInt((now.getTime() - time.getTime()) / (1000 * 60));
