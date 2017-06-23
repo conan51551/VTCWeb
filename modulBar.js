@@ -26,6 +26,8 @@ Vue.component('modubar', {
                 models.$refs.introduce && models.$refs.introduce.queryIntroduce();
             }else if(_index == 4){
                 models.$refs.queAndAns && models.$refs.queAndAns.queryQaList();
+            }else if(_index == 5){
+                models.$refs.signIn && models.$refs.signIn.querySignInList();
             }
         },
         getRecordTabsInfo: function() {
