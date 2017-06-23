@@ -355,3 +355,13 @@ $(".extend-model").append("<div id='vtcInterectMod' class='display-flex' v-show=
                             </div>\
                         ");
 loadModels.finish++;
+
+window.onbeforeunload = function() {
+    netimobj.checkout();
+}
+
+$(function(){
+    window.addEventListener("popstate", function(e) { 
+        netimobj.checkout();
+    }, false); 
+});
