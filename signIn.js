@@ -5,7 +5,7 @@ var picAndTextCom = Vue.component('signin', {
         <div class="display-flex SIGN-window">\
             <div class="sign-top">\
                 <p>签到人数:</p>\
-                <p>0</p>\
+                <p>{{signInList.length}}</p>\
                 <p>人</p>\
             </div>\
             <div class="signIn display-flex">\

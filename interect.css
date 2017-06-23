@@ -295,3 +295,16 @@
 #hudong .extend-model>div {
     display: inline-block;
 }
+
+
+/*动画*/
+
+.animate-img {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    bottom: 10px;
+    left: 7%;
+    margin-left: -10px;
+    z-index: 3000;
+}

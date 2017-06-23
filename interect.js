@@ -30,7 +30,7 @@ var interectCom = Vue.component('interect', {
             </div>\
         </div>\
         <div class="chatTextPar">\
-            <img src="img/vtc-m/favour.png" class="hudong-fav"/>\
+            <img src="img/vtc-m/favour.png" class="hudong-fav" @click="imgAnimate()"/>\
             <div class="chat_text">\
                 <div id="chat_text" contenteditable="true" @focus="focusInput" @blur="blurInput" placeholder="说点什么吧~"></div>\
             </div>\
@@ -56,6 +56,7 @@ var interectCom = Vue.component('interect', {
             interectScroll: true, //互动是否在滚动
             scrollTop1: 0,
             isOpen: true,
+            isLike: true,
         }
     },
     mounted: function() {
@@ -87,7 +88,7 @@ var interectCom = Vue.component('interect', {
                     sendtime: mtime,
                     img: that.userImage,
                     userId: that.userId,
-                    userStatus:userInfo.isAdminUser
+                    userStatus: userInfo.isAdminUser
                 }
                 that.msgDataArr.push(send);
                 sendDanmu(body, true);
@@ -312,6 +313,31 @@ var interectCom = Vue.component('interect', {
                     }
                 }
             });
+        },
+        imgAnimate: function() {
+            var that = this;
+            if (that.isLike) {
+                var $demo = $(".demo");
+                var x = 10;
+                var y = $(window).width();
+                var num = Math.floor(Math.random() * 3 + 1);
+                var index = $('.demo').children('img').length;
+                var rand = parseInt(Math.random() * (x - y + 1) + y);
+                var $img = $("<img class='animate-img' src='img/vtc-m/favour.png'>")
+                $demo.append($img);
+                // $('.demo img:eq(' + index + ')').attr('src',)
+                $img.animate({
+                    bottom: "500px",
+                    opacity: "0",
+                    left: rand,
+                }, 3000, function() {
+                    $(this).remove()
+                })
+                that.isLike = false;
+                setTimeout(function() {
+                    that.isLike = true;
+                }, 200)
+            }
         }
     },
     watch: {
