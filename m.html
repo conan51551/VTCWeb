@@ -203,10 +203,11 @@
             times++;
         }, loadModels.freshTime)
     }
+    var randomStr = randomString(6, true);
 
     //用户信息
     var userInfo = {
-        userId: 0, //用户ID
+        userId: "tu_" + randomStr, //用户ID
         isAdminUser: getCookie("adminGroup") == GetQueryString("gid"), //是不是管理员
         nickname: "游客" + randomString(6, false), //用户名
         wxNick: unescape(decodeURI(decodeURI(getCookie("wxNick")))) //微信名

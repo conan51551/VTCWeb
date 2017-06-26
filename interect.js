@@ -36,6 +36,13 @@ var interectCom = Vue.component('interect', {
             </div>\
             <a id="send_message_button" @click="submitClick()" @keypress:enter="submitClick()">发送</a>\
         </div>\
+        <div v-show="isAdminUser" :class="[\'extend-model\',\'hudongAnimated\',{slideOutRight :!isOpen},{slideInLeft:isOpen}]" >\
+            <div @click="isOpen=!isOpen">{{isOpen?\'>>\':\'<<\'}}</div>\
+            <div style="padding: 0px 10px;width:50px;">\
+                <img src="img/sendQueBtn.png" class="extend-qa" @click="sendQuestionnaire()"/>\
+                <img src="img/btn_sendRB.png" class="extend-rb" @click="sendPacket()"/>\
+            </div>\
+        </div>\
     </div>\
     ',
     data() {
@@ -360,8 +367,8 @@ window.onbeforeunload = function() {
     netimobj.checkout();
 }
 
-$(function(){
-    window.addEventListener("popstate", function(e) { 
+$(function() {
+    window.addEventListener("popstate", function(e) {
         netimobj.checkout();
-    }, false); 
+    }, false);
 });
