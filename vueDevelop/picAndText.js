@@ -67,14 +67,14 @@ var picAndTextCom = Vue.component('picandtext', {
     data() {
         return {
             isAdmin: userInfo.isAdminUser,
-            picDiv: [],
-            totalPic: [],
-            startIndex: 0,
-            scrollFlag: true,
-            isDeletePic: false,
-            isEditPic: false,
+            picDiv: [],//展示的图文列表
+            totalPic: [],//获取到的图文列表，以5个一组分开
+            startIndex: 0,//滚动时展示的图文页数
+            scrollFlag: true,//是否可以滚动
+            isDeletePic: false,//删除图文显示
+            isEditPic: false,//编辑图文显示
             loadMsg: "加载中...",
-            deleteId: "",
+            deleteId: "",//要删除的图文的ID
             isClick: true,
         }
     },
@@ -86,7 +86,7 @@ var picAndTextCom = Vue.component('picandtext', {
         var that = this;
     },
     methods: {
-        confirmDelete: function() {
+        confirmDelete: function() {//提交删除图文的信息
             var that = this;
             var data = "glb.tid=" + that.deleteId;
             $.ajax({
@@ -106,13 +106,13 @@ var picAndTextCom = Vue.component('picandtext', {
                 }
             });
         },
-        hideBottom: function() {
+        hideBottom: function() {//隐藏编辑和删除页面
             var that = this;
             that.isEditPic = false;
             that.isDeletePic = false;
             that.deleteId = "";
         },
-        scrollDiv: function(_this) {
+        scrollDiv: function(_this) {//滚动图文
             var that = this;
             var scrollTop = _this.target.scrollTop;
             var clientHeight = _this.target.clientHeight;
@@ -124,20 +124,12 @@ var picAndTextCom = Vue.component('picandtext', {
                 }
             }
         },
-        queryPicAndText: function() {
+        queryPicAndText: function() {//查询图文的信息，将获取到的所有图文信息五个一组分开
             var videoId = videoInfo.videoId;
             var that = this;
 
             that.totalPic = [];
-            if (hostname == "voip.vtc365.com") {
-                var videoURL = "http://" + hostname + "/LiveVideoServer/streams/s2/graphic/" + videoId + ".json";
-            } else if (hostname == "www.vtc365.cn") {
-                var videoURL = "http://" + hostname + "/LiveVideoServer/streams/graphic/" + videoId + ".json";
-            } else if (hostname == 'multi3.in.vtc365.com') {
-                var videoURL = "http://" + hostname + "/LiveVideoServer/streams/s3/graphic/" + videoId + ".json";
-            } else if (hostname == 't.vtc365.com') {
-                var videoURL = "http://" + hostname + "/LiveVideoServer/streams/s10/graphic/" + videoId + ".json";
-            }
+            var videoURL = queryFilePath()+"graphic/" + videoId + ".json";
             if (videoId != null || videoId != "") {
                 $.ajax({
                     url: cacheTimeout(videoURL),
@@ -163,7 +155,7 @@ var picAndTextCom = Vue.component('picandtext', {
                 });
             }
         },
-        showPicAndText: function() {
+        showPicAndText: function() {//将获取到的图文列表，做成分页的模式展示
             var that = this;
             var result = that.totalPic[that.startIndex];
             if (typeof(result) != "undefined") {
@@ -176,17 +168,17 @@ var picAndTextCom = Vue.component('picandtext', {
                 }
                 that.startIndex++;
             }
-            if (typeof(result) == "undefined") {
+            if (typeof(result) == "undefined"||that.picDiv.length<5) {
                 that.loadMsg = "已经没有更多了";
             }
             that.scrollFlag = true;
         },
-        addGraphic: function() {
+        addGraphic: function() {//发送图文
             var that = this;
-            if (that.isClick) {
+            var content = $("#target").val();
+            if (that.isClick&&content != "") {
                 that.isClick = false;
                 var videoId = videoInfo.videoId;
-                var content = encodeURI($("#target").val());
                 if (content != "") {
                     var data = {
                         "glb.videoId": videoId,
@@ -229,7 +221,7 @@ var picAndTextCom = Vue.component('picandtext', {
                 useArtEdit();
             }, 100)
         },
-        compareArr: function(arr1, arr2) {
+        compareArr: function(arr1, arr2) {//对比图文的信息，一样的话就不变化，一直查到一个不一样的，将后面的图文修改
             var index = arr1.length > arr2.length ? arr2.length : arr1.length;
             var _arr1 = arr1.reverse();
             var _arr2 = arr2.reverse();
@@ -244,11 +236,6 @@ var picAndTextCom = Vue.component('picandtext', {
                     if (!isSame) {
                         return true;
                     }
-
-                    // var sliceIndex = index;
-                    // if (_arr1[i].tid != _arr2[i].tid) {
-                    //     return true;
-                    // }
                 }
             }
             if (arr1.length != arr2.length) {

@@ -39,15 +39,7 @@ Vue.component('introduce', {
             var that = this;
 
             that.totalIntroduce = [];
-            if (hostname == "voip.vtc365.com") {
-                var videoURL = "http://" + hostname + "/LiveVideoServer/streams/s2/publicize/" + rid + ".json";
-            } else if (hostname == "www.vtc365.cn") {
-                var videoURL = "http://" + hostname + "/LiveVideoServer/streams/publicize/" + rid + ".json";
-            } else if (hostname == 'multi3.in.vtc365.com') {
-                var videoURL = "http://" + hostname + "/LiveVideoServer/streams/s3/publicize/" + rid + ".json";
-            } else if (hostname == 't.vtc365.com') {
-                var videoURL = "http://" + hostname + "/LiveVideoServer/streams/s10/publicize/" + rid + ".json";
-            }
+            var videoURL = queryFilePath()+"publicize/" + rid + ".json";
             if (rid != null || rid != "") {
                 $.ajax({
                     url: videoURL,

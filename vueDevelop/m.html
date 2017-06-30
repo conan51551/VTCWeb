@@ -15,7 +15,7 @@
     <title>VTC云直播</title>
     <link rel="stylesheet" href="vue/m.css">
     <link href="favicon.ico" rel="icon" type="image/x-icon" />
-
+    <script src="js/host.js"></script>
     <!--CDN 取Vue得文件 -->
     <script src="//cdn.bootcss.com/vue/2.3.3/vue.js"></script>
     <!--CDN失败走本地-->
@@ -210,7 +210,8 @@
         userId: "tu_" + randomStr, //用户ID
         isAdminUser: getCookie("adminGroup") == GetQueryString("gid"), //是不是管理员
         nickname: "游客" + randomString(6, false), //用户名
-        wxNick: unescape(decodeURI(decodeURI(getCookie("wxNick")))) //微信名
+        wxNick: unescape(decodeURI(decodeURI(getCookie("wxNick")))), //微信名
+        wxImgHead: ""//微信头像
     }
 
     //场次信息
@@ -342,8 +343,8 @@
                     tabs = tabs.substring(0, tabs.length - 4);
                     if (adMsgTab != 0) {
                         //加载轮播模块
-                        loadStyles("vue/adBanner/adBanner.css");
-                        loadScript("vue/adBanner/adBanner.js");
+                        loadStyles("vue/adBanner/main.css");
+                        loadScript("vue/adBanner/main.js");
                         console.log("加载轮播")
                     }
                 }
@@ -351,6 +352,11 @@
                 loadScript(adminModelJson[0].jsPath);
                 loadStyles(adminModelJson[1].cssPath);
                 loadScript(adminModelJson[1].jsPath);
+
+                if(res.wxLogin &&userInfo.wxNick!="null"){//开启了强制登录
+                    
+                }
+
                 //设置直播类型
                 videoInfo.liveWay = res.liveWay;
                 getVideoInfo(); //获取视频信息
@@ -373,6 +379,7 @@
             "success": function(data) {
                 var video = data;
                 if (video != null) {
+                    videoInfo.liveFlag = video.liveFlag;
                     //判断是不是正在直播
                     if (video.liveFlag == 1) {
                         var urlStr = video.URL;
@@ -429,15 +436,7 @@
 
     //2.2 并行直播->判断其视频直播状态以及哪些视频正在直播 (轮询)
     function getLiveVideo4Parell() {
-        if (hostname == "voip.vtc365.com") {
-            var url = "http://" + hostname + "/LiveVideoServer/streams/s2/videos.json";
-        } else if (hostname == "www.vtc365.cn") {
-            var url = "http://" + hostname + "/LiveVideoServer/streams/videos.json";
-        } else if (hostname == 'multi3.in.vtc365.com') {
-            var url = "http://" + hostname + "/LiveVideoServer/streams/s3/videos.json";
-        } else if (hostname == 't.vtc365.com') {
-            var url = "http://" + hostname + "/LiveVideoServer/streams/s10/videos.json";
-        }
+        var url = queryFilePath()+"videos.json";
         $.ajax({
             "url": url,
             "type": "get",

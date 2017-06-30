@@ -3,15 +3,15 @@ var hudongRef = queryModelRef(hudongId); //互动模块的ref
 var interectCom = Vue.component('interect', {
     template: '\
     <div id="hudong" class="display-flex">\
-        <div class="hudong display-flex" @scroll="scrollInterect($event)">\
-            <div style="text-align: center" class="loadHisMsgs" @click="loadHisMsgs" v-show="hasMore">{{hasMore}}</div>\
+        <div class="hudong display-flex" @scroll="scrollInterect($event)" :style="{backgroundColor:(hasMore?\'#eee\':\'#fff\')}">\
+            <div style="text-align: center" class="loadHisMsgs" @click="gethisMsg" v-show="hasMore">{{hasMore}}</div>\
             <div class="hudong-out" v-for="(item,index) in msgDataArr">\
                 <img :src="item.img" alt="" class="hudong-head" />\
                 <div class="hudong-right">\
                     <div class="hudong-top">\
                         <div class="hudong-user">\
                             <span class="hudong-nick">{{item.nick}}</span>\
-                            <img src="img/vtc-m/manager-icon-new.png" v-show="" class="hudong-admin">\
+                            <img src="img/vtc-m/manager-icon-new.png" v-show="item.userId==userId" class="hudong-admin">\
                         </div>\
                         <span class="hudong-time">{{item.sendtime}}</span>\
                     </div>\
@@ -32,12 +32,12 @@ var interectCom = Vue.component('interect', {
         <div class="chatTextPar">\
             <img src="img/vtc-m/favour.png" class="hudong-fav" @click="imgAnimate()"/>\
             <div class="chat_text">\
-                <div id="chat_text" contenteditable="true" @focus="focusInput" @blur="blurInput" placeholder="说点什么吧~"></div>\
+                <div id="chat_text" contenteditable="true" @keypress.13 ="submitClick()" @focus="focusInput" @blur="blurInput" placeholder="说点什么吧~"></div>\
             </div>\
-            <a id="send_message_button" @click="submitClick()" @keypress:enter="submitClick()">发送</a>\
+            <a id="send_message_button" @click="submitClick()">发送</a>\
         </div>\
         <div v-show="isAdminUser" :class="[\'extend-model\',\'hudongAnimated\',{slideOutRight :!isOpen},{slideInLeft:isOpen}]" >\
-            <div @click="isOpen=!isOpen">{{isOpen?\'>>\':\'<<\'}}</div>\
+            <div @click="isOpen=!isOpen" :class="{rotateDiv :!isOpen}"><i class="iconfont">&#xe624</i></div>\
             <div style="padding: 0px 10px;width:50px;">\
                 <img src="img/sendQueBtn.png" class="extend-qa" @click="sendQuestionnaire()"/>\
                 <img src="img/btn_sendRB.png" class="extend-rb" @click="sendPacket()"/>\
@@ -49,7 +49,7 @@ var interectCom = Vue.component('interect', {
         return {
             msgDataArr: [],
             nickname: userInfo.nickname,
-            userImage: "pic/default-user-photo.jpg",
+            userImage: userInfo.wxImgHead == "" ? "pic/default-user-photo.jpg" : userInfo.wxImgHead,
             userId: userInfo.userId,
             isAdminUser: userInfo.isAdminUser,
             isGetOnlineCnt: true,
@@ -64,6 +64,8 @@ var interectCom = Vue.component('interect', {
             scrollTop1: 0,
             isOpen: true,
             isLike: true,
+            roomId: videoInfo.liveWay == 1 ? videoInfo.rid : videoInfo.videoId, //导播以场次ID作为roomid，并行直播以videoId作为roomId
+            isChangeOnline: false
         }
     },
     mounted: function() {
@@ -75,9 +77,6 @@ var interectCom = Vue.component('interect', {
         that.initNeti();
     },
     methods: {
-        divModel: function(e) { //点击输入框事件
-            var that = this;
-        },
         submitClick: function(msg) { //发送互动消息
             var that = this;
             now = new Date();
@@ -116,11 +115,12 @@ var interectCom = Vue.component('interect', {
             var that = this;
             mynick = that.nickname;
             myuid = that.userId;
-            roomid = player.videoInfo.videoId;
+            roomid = that.roomId;
             //cdn方案及时通信
             netimobj = new netim();
             netimobj.register("message", that.getMsg);
             netimobj.register("stats", that.stats);
+            netimobj.register("like", that.showLike);
             netimobj.checkin(location.hostname, 9876, roomid, mynick,
                 function(res) {
                     console.log("The checkin good rc=" + res.code);
@@ -132,6 +132,10 @@ var interectCom = Vue.component('interect', {
                     console.log("The checkin completed");
                 });
         },
+        showLike: function(res) { //显示点赞数
+            var that = this;
+            player.$refs.controls.likeCnt = res.count;
+        },
         stats: function(res) { //注册
             var that = this;
             that.onlineCnt = res.count;
@@ -142,10 +146,34 @@ var interectCom = Vue.component('interect', {
             //显示注册的人数，显示在线人数
             player.$refs.controls.viewCnt = that.onlineCnt;
         },
+        queryOnlineCnt: function(resolve, reject) { //查修改人数的文件
+            var that = this;
+            var url = queryFilePath() + "onlineCnt/" + videoInfo.videoId + ".json";
+            $.ajax({
+                url: url,
+                type: "get",
+                dataType: "json",
+                success: function(res) {
+                    that.onlineCnt = res.count;
+                    resolve();
+                    that.isChangeOnline = true;
+                },
+                error: function() {
+                    reject();
+                }
+            })
+        },
         getMsg: function(res) { //获取及时聊天的消息
             var that = this;
             if (player.videoInfo.liveFlag != 0) {
-                netimobj.stats(); //直播时,轮询stats方法,显示实时人数
+                //先查文件是否存在修改的人数
+                new Promise(that.queryOnlineCnt).then(function() {
+                    console.log("对的")
+                }).catch(function() {
+                    netimobj.stats(); //直播时,轮询stats方法,显示实时人数
+                });
+
+                netimobj.likeCount();
             } else { //非直播时,显示人数只增
                 if (that.isGetOnlineCnt) {
                     netimobj.stats();
@@ -184,7 +212,7 @@ var interectCom = Vue.component('interect', {
         },
         gethisMsg: function() { //获取历史消息
             var that = this;
-            if (netimobj) {
+            if (netimobj && that.hasMore != "") {
                 if (that.lasttimestamp == -1) {
                     that.hasMore = "";
                 } else {
@@ -211,7 +239,7 @@ var interectCom = Vue.component('interect', {
                 return tt;
             }
         },
-        scrollInterect(_this) {
+        scrollInterect: function(_this) {
             var that = this;
             var scrollTop = _this.target.scrollTop;
             var clientHeight = _this.target.clientHeight;
@@ -223,12 +251,9 @@ var interectCom = Vue.component('interect', {
                     that.isNeedScroll = false;
                 }
             }
+            //滚动聊天栏时，整个页面不滚动
             _this.preventDefault();
             _this.stopPropagation();
-
-        },
-        loadHisMsgs: function() { //点击更多去加载以前的消息
-            var that = this;
 
         },
         showHisMsg: function(res) {
@@ -259,12 +284,19 @@ var interectCom = Vue.component('interect', {
                             //当历史聊天内容不足以填满全部聊天框之后,再向前请求一次聊天内容
                             interect.gethisMsg();
                         } else {
-                            $(".hudong").scrollTop($(".hudong")[0].scrollHeight - that.scrollTop1);
-                            that.scrollTop1 = $(".hudong")[0].scrollHeight;
+
                             that.thisHisMsgNum = 0; //够一页就清零
                             if (that.isNeedScroll) {
                                 that.sc();
+                            } else {
+                                setTimeout(function() {
+                                    $(".hudong").scrollTop($(".hudong")[0].scrollHeight - that.scrollTop1);
+                                }, 100);
+
                             }
+                            setTimeout(function() {
+                                that.scrollTop1 = $(".hudong")[0].scrollHeight;
+                            }, 100)
                         }
                     }
                 } else {
@@ -275,13 +307,15 @@ var interectCom = Vue.component('interect', {
             }
         },
         sc: function() { //收到或者发送消息成功，滚动到最新消息
-            var that = this;
-            var scrollLength = $(".hudong")[0].scrollHeight;
-            $('.hudong').animate({
-                scrollTop: scrollLength
-            }, 200);
+            setTimeout(function() {
+                var that = this;
+                var scrollLength = $(".hudong")[0].scrollHeight;
+                $('.hudong').animate({
+                    scrollTop: scrollLength
+                }, 200);
+            }, 100)
         },
-        focusInput() {
+        focusInput: function() {
             if (navigator.userAgent.match(/(iPad|iPhone|iPod)/g)) {
                 setTimeout(function() {
                     $('.chatTextPar').css("margin-bottom", "50px");
@@ -289,7 +323,7 @@ var interectCom = Vue.component('interect', {
                 }, 100);
             }
         },
-        blurInput() {
+        blurInput: function() {
             if (navigator.userAgent.match(/(iPad|iPhone|iPod)/g)) {
                 setTimeout(function() {
                     $('.chatTextPar').css("margin-bottom", "0px");
@@ -297,18 +331,18 @@ var interectCom = Vue.component('interect', {
                 }, 100);
             }
         },
-        grabeRB(rbId) {
+        grabeRB: function(rbId) { //显示红包
             redPacket.showGrap(rbId);
         },
-        sendPacket() {
+        sendPacket: function() { //显示发红包
             redPacket.showSend();
         },
         //发送问卷的方法
-        sendQuestionnaire() {
+        sendQuestionnaire: function() {
             questionnaire.showSendQue();
         },
         //跳转问卷的方法
-        intoQuestion(_qid) {
+        intoQuestion: function(_qid) {
             $.ajax({
                 url: "ajx/wen_selectUserCommit.do",
                 data: "qid=" + _qid + "&userId=" + userInfo.userId,
@@ -321,7 +355,7 @@ var interectCom = Vue.component('interect', {
                 }
             });
         },
-        imgAnimate: function() {
+        imgAnimate: function() { //点赞按钮的点击事件
             var that = this;
             if (that.isLike) {
                 var $demo = $(".demo");
@@ -345,6 +379,27 @@ var interectCom = Vue.component('interect', {
                     that.isLike = true;
                 }, 200)
             }
+
+            //read localstorage 
+            if (!getLocalStorage("like_" + that.roomId)) {
+                //cdn方案点赞
+                netimobj.like(location.hostname, 9876, that.roomId, that.nickname,
+                    function(res) {
+                        console.log("The like good rc=" + res.code);
+                        if (!window.localStorage) {
+                            //如果浏览器不支持localstorage
+                        } else {
+                            //write localstorage
+                            setLocalStorage("like_" + that.roomId, true) //点赞成功后，根据聊天室ID存储localstorage，防止重复点赞
+                        }
+                    },
+                    function(res) {
+                        console.log("The like bad rc=" + res.code);
+                    },
+                    function() {
+                        console.log("The like completed");
+                    });
+            }
         }
     },
     watch: {
@@ -365,6 +420,27 @@ loadModels.finish++;
 
 window.onbeforeunload = function() {
     netimobj.checkout();
+}
+
+function setLocalStorage(objname, obj) { //存储localstorage
+    var storage = window.localStorage;
+    if (window.localStorage) {
+        storage.setItem(objname, obj);
+    } else {
+        console.log("dont support LocalStorage");
+    }
+}
+
+function getLocalStorage(objname) { //取localstorage
+    var storage = window.localStorage;
+    var result;
+    if (window.localStorage) {
+        result = storage.getItem(objname);
+    } else {
+        console.log("dont support LocalStorage");
+        result = null;
+    }
+    return result;
 }
 
 $(function() {

@@ -34,13 +34,13 @@ var picAndTextCom = Vue.component('signin', {
     data() {
         return {
             clickSign: false,
-            isSign:true,
-            signInName: "",
-            signInList: [],
+            isSign: true,
+            signInName: "", //签到的名字
+            signInList: [], //获取到的签到列表
             isAdminUser: userInfo.isAdminUser,
-            videoId: videoInfo.videoId,
-            nickname:userInfo.nickname,
-            userId:userInfo.userId
+            videoId: videoInfo.videoId, //视频ID
+            nickname: userInfo.nickname, //用户昵称
+            userId: userInfo.userId //用户ID
         }
     },
     mounted: function() {
@@ -50,36 +50,42 @@ var picAndTextCom = Vue.component('signin', {
         var that = this;
     },
     methods: {
-        showSign:function(){
+        showSign: function() { //判断点击签到能否签到(是否以签过)
             var that = this;
-            if(that.isSign){
+            if (that.isSign) {
                 that.clickSign = true;
-            }else{
+            } else {
                 alert("您已签过到");
             }
         },
-        clickSignIn: function() {
+        clickSignIn: function() { //点击签到按钮
             var that = this;
             var realName1 = that.signInName;
             var vid = that.videoId;
             var nickname = that.nickname;
             var userId = that.userId;
-            if (vid != null && vid != "" && userId != null && nickname != null && nickname != "" && realName1 != null && realName1 != "") {
-                var data1 = "sign.videoId=" + vid + "&sign.userId=" + userId + "&sign.nickname=" + nickname + "&sign.realName=" + realName1;
-                $.ajax({
-                    "url": "ajx/userSign.do",
-                    "type": "POST",
-                    "data": data1,
-                    "success": function(data) {
-                        var res = data.result;
-                        if (res == "OK") {
-                            that.querySignInList();
-                        } else {
-                            alert("签到失败");
+            if (vid != null && vid != "" && userId != null && nickname != null && nickname != "") {
+                if (realName1 != null && realName1 != "") {
+                    var data1 = "sign.videoId=" + vid + "&sign.userId=" + userId + "&sign.nickname=" + nickname + "&sign.realName=" + realName1;
+                    $.ajax({
+                        "url": "ajx/userSign.do",
+                        "type": "POST",
+                        "data": data1,
+                        "success": function(data) {
+                            var res = data.result;
+                            if (res == "OK") {
+                                that.querySignInList();
+                            } else {
+                                alert("签到失败");
+                            }
+                            that.clickSign = false;
                         }
-                        that.clickSign = false;
-                    }
-                });
+                    });
+                } else {
+                    alert("请填写签到名称");
+                }
+            } else {
+                alert("您已掉线，请刷新页面");
             }
         },
         querySignInList: function() { //查询签到的列表
@@ -92,8 +98,8 @@ var picAndTextCom = Vue.component('signin', {
                 "success": function(data) {
                     that.signInList = [];
                     that.signInList = data.signList;
-                    for(index in that.signInList){
-                        if(that.signInList[index].userId == that.userId){
+                    for (index in that.signInList) {
+                        if (that.signInList[index].userId == that.userId) {
                             that.isSign = false;
                         }
                     }

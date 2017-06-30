@@ -40,12 +40,15 @@
 .hudong-top {
     height: 24px;
     line-height: 24px;
+    display: flex;
 }
 
 .hudong-bottom {
     color: #666;
     display: block;
     position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .hudong-admin {
@@ -69,7 +72,6 @@
     -webkit-overflow-scrolling: touch;
     flex: 1;
     flex-direction: column;
-    background-color: #eee;
 }
 
 .hudong-user {
@@ -77,12 +79,13 @@
     text-overflow: ellipsis;
     width: 65% !important;
     overflow: hidden;
-    display: inline-block;
+    display: flex;
+    margin-right: 20px;
+    flex: 1;
 }
 
 .hudong-nick {
-    max-width: 73%;
-    display: inherit;
+    display: inline-block;
     color: #1eb2ff;
     font-size: 13px;
     text-overflow: ellipsis;
@@ -307,4 +310,31 @@
     left: 7%;
     margin-left: -10px;
     z-index: 3000;
+}
+
+@font-face {
+    font-family: 'iconfont';
+    src: url('iconfont.eot');
+    src: url('iconfont.eot?#iefix') format('embedded-opentype'), url('iconfont.woff') format('woff'), url('iconfont.ttf') format('truetype'), url('iconfont.svg#iconfont') format('svg');
+}
+
+.iconfont {
+    font-family: "iconfont" !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;
+    color: #38b9ff;
+}
+
+.rotateDiv {
+    transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    /* IE 9 */
+    -moz-transform: rotate(180deg);
+    /* Firefox */
+    -webkit-transform: rotate(180deg);
+    /* Safari 和 Chrome */
+    -o-transform: rotate(180deg);
 }

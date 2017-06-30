@@ -16,11 +16,10 @@ Vue.component('questionnaire', {
     ',
     data() {
         return {
-            queList: [],
+            queList: [],//查询的问卷列表
             gid: videoInfo.groupId,
-            isConnected: 0, //管理员可不可以发送
-            isShow: false,
-            selectIndex: -1,
+            isShow: false,//是否显示发送问卷的界面
+            selectIndex: -1,//选择的问卷
         }
     },
     mounted: function() {
@@ -31,7 +30,7 @@ Vue.component('questionnaire', {
         questionnaire = this;
     },
     methods: {
-        queryQuestionnaireByGid: function() {
+        queryQuestionnaireByGid: function() {//通过组ID查询问卷列表
             var that = this;
             that.isShow = true;
             $.ajax({
@@ -47,17 +46,17 @@ Vue.component('questionnaire', {
                 }
             });
         },
-        selectQue: function(_index) {
+        selectQue: function(_index) {//选择问卷的点击事件
             var that = this;
             that.selectIndex = _index;
         },
-        sendQuestionnaire: function() {
+        sendQuestionnaire: function() {//点击发送问卷
             var that = this;
             var question = that.queList[that.selectIndex];
             var message = "#que_" + question.status + "_" + question.key + "_" + question.title;
             models.$refs.hudong.submitClick(message);
         },
-        showSendQue: function() {
+        showSendQue: function() {//显示问卷列表的界面
             var that = this;
             $("#pop").show();
             that.queryQuestionnaireByGid();

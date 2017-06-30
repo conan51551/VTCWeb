@@ -20,17 +20,17 @@ Vue.component('modubar', {
             var that = this;
             that.selectTab = _index;
             models.selectModel = _index;
-            if (_index == 2) {
+            if (_index == 2) {//点击图文
                 models.$refs.pat && models.$refs.pat.queryPicAndText();
-            } else if (_index == 6) {
+            } else if (_index == 6) {//点击介绍
                 models.$refs.introduce && models.$refs.introduce.queryIntroduce();
-            }else if(_index == 4){
+            }else if(_index == 4){//点击问答
                 models.$refs.queAndAns && models.$refs.queAndAns.queryQaList();
-            }else if(_index == 5){
+            }else if(_index == 5){//点击签到
                 models.$refs.signIn && models.$refs.signIn.querySignInList();
             }
         },
-        getRecordTabsInfo: function() {
+        getRecordTabsInfo: function() {//查询打开的模块信息
             var that = this;
             if (typeof(recordInfo) != "undefined") {
                 if (recordInfo.tabsName != "" && recordInfo.tabsName != null) {

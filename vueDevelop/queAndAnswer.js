@@ -29,7 +29,7 @@ var picAndTextCom = Vue.component('queandanswer', {
                 </div>\
             </div>\
             <div class="que-text-par">\
-                <textarea class="chat_text" v-model="sendMsg" :placeHolder="placeHolder" id="queText"></textarea>\
+                <textarea class="chat_text" v-model="sendMsg" :placeHolder="placeHolder" id="queText" @focus="focusInput" @blur="blurInput"></textarea>\
                 <a id="send_message_button" @click="submitClick()">{{isAnswer?\'回答\':\'发送\'}}</a>\
             </div>\
         </div>\
@@ -42,21 +42,20 @@ var picAndTextCom = Vue.component('queandanswer', {
             nickname: userInfo.nickname,
             userId: userInfo.userId,
             admin: "admin",
-            placeHolder: "输入问题",
-            isAnswer: false,
-            questionId: -1,
+            placeHolder: "输入问题",//问答输入框的placeholder
+            isAnswer: false,//是否点击了回答按钮
+            questionId: -1,//要回答的问题的ID
             sendMsg: "",
         }
     },
     mounted: function() {
         var that = this;
-        // that.queryPicAndText();
     },
     created: function() {
         var that = this;
     },
     methods: {
-        queryQaList: function() {
+        queryQaList: function() {//查询问答列表
             var that = this;
             var data1 = "qa.videoId=" + that.videoId;
             $.ajax({
@@ -121,7 +120,7 @@ var picAndTextCom = Vue.component('queandanswer', {
                 alert("未登录");
             }
         },
-        commitAns: function() {
+        commitAns: function() {//提交答案
             var that = this;
             var commitAns = that.sendMsg;
             var vid = that.videoId;
@@ -207,7 +206,21 @@ var picAndTextCom = Vue.component('queandanswer', {
                 result = timeStr;
             }
             return result;
-        }
+        },
+        focusInput: function(e) {//iphone输入框获取焦点时被覆盖问题
+            if (navigator.userAgent.match(/(iPad|iPhone|iPod)/g)) {
+                setTimeout(function() {
+                    e.target.parentElement.style.marginBottom = 50+"px"
+                }, 100);
+            }
+        },
+        blurInput: function(e) {
+            if (navigator.userAgent.match(/(iPad|iPhone|iPod)/g)) {
+                setTimeout(function() {
+                    e.target.parentElement.style.marginBottom = 0+"px"
+                }, 100);
+            }
+        },
     },
     computed: {
 
