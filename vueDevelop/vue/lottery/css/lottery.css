@@ -1,0 +1,436 @@
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    .body{
+    	height:250px;
+    }
+    .x-center{
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .y-center{
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+     .xy-center{
+         position: absolute;
+         left: 50%;
+         top:50%;
+         transform: translateX(-50%) translateY(-50%);
+     }
+ 
+    #sendLottery .main .close,#winnerList .main .close{
+         position: absolute;
+         width: 11.5px;
+         height: 11.5px;
+         top:10px;
+         right: 15px;
+         color:#ad4343;
+         background: url("../../../img/redPacket/close.png") no-repeat;
+         background-size: 10px 10px;
+     }
+     #sendLottery .main,#winnerList .main{
+         /**overflow: hidden;**/
+         width: 300px;
+         height: 400px;
+         border-radius: 5px;
+         background: #f1f1f1;
+     }
+    #sendLottery .main .header,#winnerList .main .header{
+         overflow: hidden;
+         width: 300px;
+         height: 30px;
+         background: #e84141;
+         text-align: center;
+	     font-size: 16px;
+	     color: #ffffff;
+	     padding-top: 3px;
+     }
+    #sendLottery .main .body>div,#winnerList .main .body>div{
+         width: 270px;
+         height: 40px;
+         background: #ffffff;
+         margin-left: auto;
+         margin-right: auto;
+         margin-top: 30px;
+     }
+    #sendLottery .main .body .tip,#winnerList .main .body .tip{
+         color: #9b9b9b;
+         width: 270px;
+         margin-left: auto;
+         margin-right: auto;
+         display: block;
+         font-size: 12px;
+         margin-top: 5px;
+         margin-left: 15px;
+     }
+    #sendLottery .main .body>div .title,#winnerList .main .body>div .title{
+         line-height: 40px;
+         padding-left: 15px;
+         color: #111111;
+     }
+    #sendLottery .main .body>div>input,#winnerList .main .body>div>input{
+         line-height: 40px;
+         display: inline-block;
+         float: right;
+         width: 150px;
+         border: none;
+         text-align: right;
+         font-size: 14px;
+         padding-right: 5px;
+     }
+
+    #sendLottery .main .body>div .unit,#winnerList .main .body>div .unit{
+         padding-right: 15px;
+         float: right;
+         line-height: 40px;
+     }
+
+    #sendLottery .main .footer>button,#winnerList .main .footer>button{
+         width: 270px;
+         height: 40px;
+         margin-top: 20px;
+         line-height: 40px;
+         border-radius: 3px;
+         background: #e84141;
+         margin-left: auto;
+         margin-right: auto;
+         display: block;
+         border: none;
+         color: #f5e89d;
+         font-size: 17px;
+     }
+    #sendLottery .main .footer .tip,#winnerList .main .footer .tip{
+         color: #a4a4a4;
+         width: 270px;
+         margin-left: auto;
+         margin-right: auto;
+         display: block;
+         font-size: 12px;
+         margin-top: 5px;
+         text-align: right;
+     }
+    #sendLottery .main .footer .tip>span,#winnerList .main .footer .tip>span{
+        color: #e84141;
+    }
+    #sendLottery ,#winnerList{
+    	width: 100%;
+	    height: 100%;
+	    z-index: 6000;
+	    position: fixed;
+	    background: rgba(0,0,0,.5);
+    }
+    #winnerList ul{
+    	height: 345px;
+    	overflow-y: auto;
+    }
+    #winnerList ul li{
+    	font-size: 14px;
+	    color: #333333;
+	    text-align: center;
+	    padding: 5px 5px;
+	    margin-top: 8px;
+	    background-color: #fff;
+	    margin: 5px;
+	    position: relative;
+    }
+	.select_type{
+	    width: 175px;
+	    height: inherit;
+	    border: none;
+	    padding-left:60px;
+	}
+	.memberList{
+		display:none
+	}
+	.btn_search{
+		float: right;
+	    width: 50px;
+	    height: 30px;
+	    margin-top: 5px;
+	    border-radius: 3px;
+	    border: none;
+	    background: #e84141;
+	    color: #ffffff;
+	}
+	.input_vipList{
+		float:none !important;
+	}
+	/*********多选下拉框组件**********/
+	@charset "UTF-8";
+body,div,section,ul,li,p,img,dl,dt,dd,table,tr,td,input,button,h1,h2,h3,h4,h5,h6,fieldset{margin: 0px;padding: 0px;font-family: "Microsoft Yahei";}
+input{
+	border: 1px solid #ccc;
+	outline:0;
+	transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+input:focus,select:focus,textarea:focus{
+	border-color: rgba(82,168,236,.8);
+	box-shadow: 0 0 8px rgba(82,168,236,.6);
+}
+
+.clearfix:after {content: "."; height: 0px; display: block; clear: both; visibility: hidden;}
+
+h3{
+	margin: 20px;
+}
+
+.wrapper{
+	width: 800px;
+	margin: 20px 0px 50px 20px;
+}
+
+/*功能下拉框 整体壁纸*/
+.functional-select-wrapper{
+	width: 100%;
+	position: relative;
+	font-size: 14px;
+	float:right;
+
+}
+
+/*展示容器*/
+.functional-select-wrapper .display-container{
+	width: 100%;
+	height: inherit;
+	box-sizing: border-box;
+	position: relative;
+	display: block;
+	padding: 6px 12px 6px 12px;
+	color: #555;
+	background-color: #FFF;
+	word-break: break-all;
+	cursor: pointer;
+}
+
+.functional-select-wrapper .display-container .single-selected{
+	float: left;
+}
+
+/*单选 搜索框获取焦点后 display-container下边框圆弧去掉radius*/
+.functional-select-wrapper .single-selected-focus{
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+	transition: all 0.5s ease;
+}
+
+.functional-select-wrapper .display-container .drop{
+	position: absolute;
+	top: 12px;
+	right: 6px;
+	float: right;
+	font-style: normal;
+	transition: all 0.5s ease;
+}
+
+.functional-select-wrapper .display-container .drop-up{
+	transform: rotate(180deg);
+}
+
+/*选项容器*/
+.functional-select-wrapper .options-container{
+	width: 100%;
+	border: 1px solid #CCC;
+	background-color: #FFF;
+	position: absolute;
+	top: 100%;
+	margin-top: -1px;
+	box-sizing: border-box;
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	overflow: hidden;
+	z-index: 1;
+}
+
+.functional-select-wrapper .options-container .search-container{
+	display: block;
+	padding: 5px;
+}
+
+.functional-select-wrapper .options-container .search-container input{
+	width: 100%;
+	height: 30px;
+	box-sizing: border-box;
+	padding-left: 6px;
+	display: block;
+	border-radius: 4px;
+}
+
+.functional-select-wrapper .options-container .options-ul-list{
+	max-height: 120px;
+	list-style-type: none;
+	overflow-x: visible;
+	overflow-y: auto;
+	cursor: pointer;
+}
+
+.functional-select-wrapper .options-container .options-ul-list li{
+	height: 32px;
+	line-height: 20px;
+	box-sizing: border-box;
+	text-indent: 5px;
+	padding: 6px;
+}
+
+.functional-select-wrapper .options-container .options-ul-list li:hover{
+	background-color: #5897fb;
+	color: #FFF;
+	transition: all 0.3s ease;
+}
+
+.functional-select-wrapper .options-container .options-ul-list .selected_vip{
+	background-color: #DDD;
+}
+
+/*多选框 展示容器*/
+.functional-select-wrapper .multiple-select-container{
+	overflow: hidden;
+	padding: 12px 6px 0px 12px;
+}
+
+
+/*单个选中的item*/
+.functional-select-wrapper .multiple-selected-item{
+	width: auto;
+	height: 20px;
+	line-height: 15px;
+	box-sizing: border-box;
+	margin: 0px 5px 5px 0px;
+	padding: 2px 15px 2px 6px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	display: inline-block;
+	position: relative;
+	float: left;
+	background: #eee;
+}
+
+.functional-select-wrapper .multiple-selected-item i{
+	font-style: normal;
+	position: absolute;
+	right: 3px;
+	top: 0px;
+	cursor: pointer;
+	color: #aaa;
+}
+
+.functional-select-wrapper .multiple-selected-item i:hover{
+	font-weight: bolder;
+	color: #000;
+}
+/******************观众端********************/
+ #winnerPanel .main .close,#loserPanel .main .close{
+         position: absolute;
+         width: 11.5px;
+         height: 11.5px;
+         top:10px;
+         right: 15px;
+         color:#ad4343;
+         background: url("../../../img/redPacket/close.png") no-repeat;
+         background-size: 10px 10px;
+     }
+     #winnerPanel .main,#loserPanel .main{
+         overflow: hidden;
+         width: 300px;
+         height: 400px;
+         border-radius: 5px;
+         background: #f1f1f1;
+     }
+    #winnerPanel .main .header,#loserPanel .main .header{
+         overflow: hidden;
+         width: 300px;
+         height: 30px;
+         background: #e84141;
+         text-align: center;
+	     font-size: 16px;
+	     color: #ffffff;
+	     padding-top: 3px;
+     }
+    #winnerPanel .main .body>div,#loserPanel .main .body>div{
+         width: 270px;
+         height: 40px;
+         background: #ffffff;
+         margin-left: auto;
+         margin-right: auto;
+         margin-top: 30px;
+     }
+    #winnerPanel .main .body .tip,#loserPanel .main .body .tip{
+         color: #9b9b9b;
+         width: 270px;
+         margin-left: auto;
+         margin-right: auto;
+         display: block;
+         font-size: 12px;
+         margin-top: 5px;
+         margin-left: 15px;
+     }
+    #winnerPanel .main .body>div .title,#loserPanel .main .body>div .title{
+         line-height: 40px;
+         padding-left: 15px;
+         color: #111111;
+     }
+    #winnerPanel .main .body>div>input,#loserPanel .main .body>div>input{
+         line-height: 40px;
+         display: inline-block;
+         float: right;
+         width: 150px;
+         border: none;
+         text-align: right;
+         font-size: 14px;
+         padding-right: 5px;
+     }
+
+    #winnerPanel .main .body>div .unit,#loserPanel .main .body>div .unit{
+         padding-right: 15px;
+         float: right;
+         line-height: 40px;
+     }
+
+    #winnerPanel .main .footer>button,#loserPanel .main .footer>button{
+         width: 270px;
+         height: 40px;
+         margin-top: 20px;
+         line-height: 40px;
+         border-radius: 3px;
+         background: #e84141;
+         margin-left: auto;
+         margin-right: auto;
+         display: block;
+         border: none;
+         color: #f5e89d;
+         font-size: 17px;
+     }
+    #winnerPanel .main .footer .tip,#loserPanel .main .footer .tip{
+         color: #a4a4a4;
+         width: 270px;
+         margin-left: auto;
+         margin-right: auto;
+         display: block;
+         font-size: 12px;
+         margin-top: 5px;
+         text-align: right;
+     }
+    #winnerPanel .main .footer .tip>span,#loserPanel .main .footer .tip>span{
+        color: #e84141;
+    }
+    #winnerPanel ,#loserPanel{
+    	width: 100%;
+	    height: 100%;
+	    z-index: 6000;
+	    position: fixed;
+	    background: rgba(0,0,0,.5);
+    }
+	#loserPanel p {
+    	text-align: center;
+		font-size: 16px;
+		margin-top: 100px;
+    }
+    #winnerPanel p {
+    	text-align: center;
+		font-size: 16px;
+		margin-top: 30px;
+    }

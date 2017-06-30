@@ -1,0 +1,81 @@
+#questionnaire-bg {
+    position: fixed;
+    width: 80%;
+    height: 450px;
+    background-color: #f0f0f0;
+    color: #000;
+    z-index: 1002;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    top: 50%;
+    overflow-y: auto;
+    border-radius: 5px;
+}
+
+.send-que {
+    text-align: left;
+    margin-top: 15px;
+    font-size: 13px;
+    margin-left: 15px;
+}
+
+.select-que {
+    font-size: 14px;
+    color: #333333;
+    text-align: left;
+    padding: 10px 15px;
+    margin-top: 8px;
+    background-color: #fff;
+    margin: 10px;
+    position: relative;
+}
+
+.sendBtn {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #27b5ff;
+    color: #fff;
+    border: 0px;
+    width: 90%;
+    height: 40px;
+    font-size: 15px;
+    border-radius: 3px;
+}
+
+.closeBtn {
+    background: url("../../../img/closeBtn.png") no-repeat;
+    padding: 7px;
+    background-size: 100%;
+    position: absolute;
+    right: 10px;
+    top: 11px;
+}
+
+.unselect {
+    background: url("../../../img/unselect.png") no-repeat;
+    padding: 10px;
+    background-size: 100%;
+    position: absolute;
+    right: 15px;
+    top: 10px;
+}
+
+.select {
+    background: url("../../../img/select.png") no-repeat;
+    padding: 10px;
+    background-size: 100%;
+    position: absolute;
+    right: 15px;
+    top: 10px;
+}
+
+.topic {
+    font-size: 14px;
+}
+
+.scrollDiv{
+    height: 345px;
+    overflow-y: auto;
+}

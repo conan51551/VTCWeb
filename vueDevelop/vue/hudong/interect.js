@@ -11,7 +11,7 @@ var interectCom = Vue.component('interect', {
                     <div class="hudong-top">\
                         <div class="hudong-user">\
                             <span class="hudong-nick">{{item.nick}}</span>\
-                            <img src="img/vtc-m/manager-icon-new.png" v-show="item.userId==userId" class="hudong-admin">\
+                            <img src="img/vtc-m/manager-icon-new.png" v-show="item.userId.length==6" class="hudong-admin">\
                         </div>\
                         <span class="hudong-time">{{item.sendtime}}</span>\
                     </div>\
@@ -36,11 +36,11 @@ var interectCom = Vue.component('interect', {
             </div>\
             <a id="send_message_button" @click="submitClick()">发送</a>\
         </div>\
-        <div v-show="isAdminUser" :class="[\'extend-model\',\'hudongAnimated\',{slideOutRight :!isOpen},{slideInLeft:isOpen}]" >\
+        <div v-show="isAdminUser&&animateModu" :class="[\'extend-model\',\'hudongAnimated\',{slideOutRight :!isOpen},{slideInLeft:isOpen}]" >\
             <div @click="isOpen=!isOpen" :class="{rotateDiv :!isOpen}"><i class="iconfont">&#xe624</i></div>\
-            <div style="padding: 0px 10px;width:50px;">\
-                <img src="img/sendQueBtn.png" class="extend-qa" @click="sendQuestionnaire()"/>\
-                <img src="img/btn_sendRB.png" class="extend-rb" @click="sendPacket()"/>\
+            <div style="width:50px;margin-left:22px;">\
+                <img src="img/sendQueBtn.png" v-show="queModu" class="extend-qa" @click="sendQuestionnaire()"/>\
+                <img src="img/btn_sendRB.png" v-show="redModu" class="extend-rb" @click="sendPacket()"/>\
             </div>\
         </div>\
     </div>\
@@ -65,7 +65,10 @@ var interectCom = Vue.component('interect', {
             isOpen: true,
             isLike: true,
             roomId: videoInfo.liveWay == 1 ? videoInfo.rid : videoInfo.videoId, //导播以场次ID作为roomid，并行直播以videoId作为roomId
-            isChangeOnline: false
+            isChangeOnline: false,
+            animateModu: recordInfo.redPacket || recordInfo.questionnaire ? true : false,
+            redModu: recordInfo.redPacket,
+            queModu: recordInfo.questionnaire
         }
     },
     mounted: function() {
@@ -121,11 +124,12 @@ var interectCom = Vue.component('interect', {
             netimobj.register("message", that.getMsg);
             netimobj.register("stats", that.stats);
             netimobj.register("like", that.showLike);
-            netimobj.checkin(location.hostname, 9876, roomid, mynick,
+            netimobj.checkin(location.hostname, 80, roomid, mynick,
                 function(res) {
                     console.log("The checkin good rc=" + res.code);
                 },
                 function(res) {
+                    that.hasMore = "聊天服务器断开";
                     console.log("The checkin bad rc=" + res.code);
                 },
                 function() {
@@ -155,6 +159,7 @@ var interectCom = Vue.component('interect', {
                 dataType: "json",
                 success: function(res) {
                     that.onlineCnt = res.count;
+                    player.$refs.controls.viewCnt = that.onlineCnt;
                     resolve();
                     that.isChangeOnline = true;
                 },
@@ -172,8 +177,6 @@ var interectCom = Vue.component('interect', {
                 }).catch(function() {
                     netimobj.stats(); //直播时,轮询stats方法,显示实时人数
                 });
-
-                netimobj.likeCount();
             } else { //非直播时,显示人数只增
                 if (that.isGetOnlineCnt) {
                     netimobj.stats();
@@ -192,6 +195,7 @@ var interectCom = Vue.component('interect', {
                 that.lasttimestamp = res.lastStamp;
                 that.gethisMsg();
             }
+            netimobj.likeCount();
             //定时刷新cnd消息
             if (res.code == 0) {
                 var i = 0;
@@ -383,7 +387,7 @@ var interectCom = Vue.component('interect', {
             //read localstorage 
             if (!getLocalStorage("like_" + that.roomId)) {
                 //cdn方案点赞
-                netimobj.like(location.hostname, 9876, that.roomId, that.nickname,
+                netimobj.like(location.hostname, 80, that.roomId, that.nickname,
                     function(res) {
                         console.log("The like good rc=" + res.code);
                         if (!window.localStorage) {

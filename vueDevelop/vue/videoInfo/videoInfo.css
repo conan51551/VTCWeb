@@ -1,0 +1,28 @@
+#videoInfoModel {
+    flex: 1;
+    flex-direction: column;
+    height: 100%;
+}
+
+#videoInfoModel>div {
+    margin-top: 30px;
+}
+
+.video-title {
+    display: inline-block;
+    vertical-align: middle;
+    font-family: 'SimHei';
+    font-size: 18px;
+    line-height: 18px;
+    color: #414141;
+    font-weight: 700;
+    width: 100%;
+    text-align: center;
+}
+
+.video-info {
+    color: #414141;
+    font-size: 13px;
+    padding: 0 15px;
+    margin-top: 25px;
+}
